@@ -3,12 +3,7 @@ import withAuth, {
   NextRequestWithAuth,
 } from "next-auth/middleware";
 import { NextFetchEvent, NextResponse } from "next/server";
-import _ from "lodash";
-
-import { PrismaClient } from "@prisma/client/edge";
-const prisma = new PrismaClient({
-  datasourceUrl: process.env.PRISMA_CONNECTION_STRING,
-});
+import prisma_edge from "@/lib/prisma_edge";
 
 async function middleware(
   req: NextRequestWithAuth,
@@ -41,7 +36,7 @@ const middlewareOptions: NextAuthMiddlewareOptions = {
 
       if (!email || email === "") return false;
 
-      const user = await prisma.user.findUnique({
+      const user = await prisma_edge.user.findUnique({
         where: {
           email: token!.email ?? "",
         },

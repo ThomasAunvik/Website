@@ -2,6 +2,7 @@ import { PrismaClient } from "@prisma/client";
 
 declare global {
   var prisma: PrismaClient | undefined;
+  var prisma_edge: PrismaClient | undefined;
 }
 
 const prisma = global.prisma || new PrismaClient();
