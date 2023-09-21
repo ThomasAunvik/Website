@@ -1,7 +1,19 @@
-import { getToken } from "next-auth/jwt";
-import { NextRequest, NextResponse } from "next/server";
+import withAuth, {
+  NextAuthMiddlewareOptions,
+  NextRequestWithAuth,
+} from "next-auth/middleware";
+import { NextFetchEvent, NextResponse } from "next/server";
+import _ from "lodash";
 
-export default async function middleware(req: NextRequest) {
+import { PrismaClient } from "@prisma/client/edge";
+const prisma = new PrismaClient({
+  datasourceUrl: process.env.PRISMA_CONNECTION_STRING,
+});
+
+async function middleware(
+  req: NextRequestWithAuth,
+  _: NextFetchEvent
+): Promise<NextResponse<unknown>> {
   // Get the pathname of the request (e.g. /, /protected)
   const path = req.nextUrl.pathname;
 
@@ -10,10 +22,9 @@ export default async function middleware(req: NextRequest) {
     return NextResponse.next();
   }
 
-  const session = await getToken({
-    req,
-    secret: process.env.NEXTAUTH_SECRET,
-  });
+  const session = req.nextauth;
+
+  console.log(session);
 
   if (!session && path === "/signout") {
     return NextResponse.redirect(new URL("/login", req.url));
@@ -22,3 +33,32 @@ export default async function middleware(req: NextRequest) {
   }
   return NextResponse.next();
 }
+
+const middlewareOptions: NextAuthMiddlewareOptions = {
+  callbacks: {
+    authorized: async ({ token }) => {
+      const email = token?.email;
+      console.log(token);
+      if (_.isEmpty(email)) return false;
+
+      const user = await prisma.user.findUnique({
+        where: {
+          email: token!.email ?? "",
+        },
+      });
+
+      console.log("User: " + user);
+
+      return user?.admin == true;
+    },
+  },
+  pages: {
+    signIn: "/login",
+    signOut: "/signout",
+    newUser: "/register",
+  },
+};
+
+export default withAuth(middleware, middlewareOptions);
+
+export const config = { matcher: ["/dashboard"] };

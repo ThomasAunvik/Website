@@ -1,1 +1,6 @@
 *.lockb binary diff=lockb
+*.png filter=lfs diff=lfs merge=lfs -text
+*.jpg filter=lfs diff=lfs merge=lfs -text
+*.webp filter=lfs diff=lfs merge=lfs -text
+*.bin filter=lfs diff=lfs merge=lfs -text
+dj3498u4hyyarh35rkjfnghbjxug6b19 filter=lfs diff=lfs merge=lfs -text
