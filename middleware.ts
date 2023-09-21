@@ -38,16 +38,14 @@ const middlewareOptions: NextAuthMiddlewareOptions = {
   callbacks: {
     authorized: async ({ token }) => {
       const email = token?.email;
-      console.log(token);
-      if (_.isEmpty(email)) return false;
+
+      if (!email || email === "") return false;
 
       const user = await prisma.user.findUnique({
         where: {
           email: token!.email ?? "",
         },
       });
-
-      console.log("User: " + user);
 
       return user?.admin == true;
     },
