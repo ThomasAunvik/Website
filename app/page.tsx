@@ -29,8 +29,10 @@ export default function Home() {
         <div className="flex flex-col items-center pt-5">
           <h1 className="hidden md:block">Direct Contact</h1>
           <ProfileEmails />
-          <h1 className="invisible md:block mt-4">Social Links</h1>
-          <ProfileSocials />
+          <h1 className="hidden md:block mt-4">Social Links</h1>
+          <div className="pt-12 md:pt-0 w-full">
+            <ProfileSocials />
+          </div>
         </div>
         <Suspense>
           <LoginButton />
