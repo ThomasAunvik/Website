@@ -11,6 +11,7 @@ import {
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
 interface SocialAccount {
+  id: string;
   name: string;
   link: string;
   icon: JSX.Element;
@@ -19,31 +20,37 @@ interface SocialAccount {
 export const ProfileSocials = () => {
   const socials: SocialAccount[] = [
     {
+      id: "github",
       name: "ThomasAunvik",
       link: "https://github.com/ThomasAunvik",
       icon: <FontAwesomeIcon icon={faGithub} className="w-6" />,
     },
     {
+      id: "linkedin",
       name: "in/thaun",
       link: "https://www.linkedin.com/in/thaun",
       icon: <FontAwesomeIcon icon={faLinkedin} className="w-6" />,
     },
     {
+      id: "reddit",
       name: "u/Thaun_",
       link: "https://www.reddit.com/user/Thaun_",
       icon: <FontAwesomeIcon icon={faReddit} className="w-6" />,
     },
     {
+      id: "twitter",
       name: "@ThomasAunvik",
       link: "https://twitter.com/ThomasAunvik",
       icon: <FontAwesomeIcon icon={faXTwitter} className="w-6" />,
     },
     {
+      id: "youtube",
       name: "Thaun_",
       link: "https://www.youtube.com/channel/UCZdB8pMvNNTgTwt9aln_wbA",
       icon: <FontAwesomeIcon icon={faYoutube} className="w-6" />,
     },
     {
+      id: "mastodon",
       name: "@thaun@social.linux.pizza",
       link: "https://social.linux.pizza/@thaun",
       icon: <FontAwesomeIcon icon={faMastodon} className="w-6" />,
@@ -53,7 +60,10 @@ export const ProfileSocials = () => {
   return (
     <ul className="flex flex-col space-y-2 w-full">
       {socials.map((s) => (
-        <li className="flex flex-row items-center justify-center md:justify-start">
+        <li
+          key={`social-${s.id}`}
+          className="flex flex-row items-center justify-center md:justify-start"
+        >
           <Link href={s.link} target="_blank">
             {s.icon}
           </Link>
