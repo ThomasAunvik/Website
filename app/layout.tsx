@@ -31,9 +31,6 @@ export default function RootLayout({
     <html lang="en">
       <body className={inter.className + " h-screen flex flex-col"}>
         <Toaster />
-        <Suspense fallback="Loading...">
-          <AuthStatus />
-        </Suspense>
         <div className="flex-1">{children}</div>
       </body>
     </html>

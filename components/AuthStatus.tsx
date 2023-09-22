@@ -9,12 +9,13 @@ export const AuthStatus = async () => {
   return (
     <div className="w-full flex items-center bg-gray-600 h-8">
       <p className="text-stone-200 text-sm pl-4">
-        Signed in as {session.user?.email}
+        <span className="hidden md:inline-block">Signed in as&nbsp;</span>
+        {session.user?.email}
       </p>
-      <div className="mr-0 ml-auto pr-8">
+      <div className="mr-0 ml-auto pr-4 md:pr-8">
         <Link href="/dashboard">Dashboard</Link>
       </div>
-      <div className="mr-0 pr-8">
+      <div className="mr-0 pr-2 md:pr-8">
         <Link href="/signout">Sign out</Link>
       </div>
     </div>
