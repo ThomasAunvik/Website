@@ -48,8 +48,8 @@ export default function Home() {
             <h2>Aka. Thaun_</h2>
           </div>
           <div className="flex flex-row items-center flex-wrap justify-evenly">
-            <GithubStatsLanguages />
             <GithubStatsOverview />
+            <GithubStatsLanguages />
           </div>
           <div>
             <a href="/login">Login Please...</a>
