@@ -19,8 +19,6 @@ async function middleware(
 
   const session = req.nextauth;
 
-  console.log(session);
-
   if (!session && path === "/signout") {
     return NextResponse.redirect(new URL("/login", req.url));
   } else if (session && (path === "/login" || path === "/register")) {

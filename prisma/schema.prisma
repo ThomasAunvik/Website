@@ -19,3 +19,32 @@ model User {
   password  String
   admin		Boolean @default(false)
 }
+
+model Post {
+	id			String @id @default(uuid())
+
+	createdAt	DateTime @default(now())
+	updatedAt	DateTime @updatedAt
+	removedAt	DateTime?
+
+	revisions	PostRevision[] @relation()
+
+	title		String
+	undertitle	String
+	content		String
+}
+
+model PostRevision {
+	revisionId		String @id @default(uuid())
+	
+	post			Post @relation(fields: [postId], references: [id])
+	postId 			String
+	
+	field			String
+	value			String
+
+	description		String?
+
+	createdAt		DateTime @default(now())
+	removedAt		DateTime?
+}
