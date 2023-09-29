@@ -2,49 +2,57 @@
 // learn more about it in the docs: https://pris.ly/d/prisma-schema
 
 generator client {
-  provider = "prisma-client-js"
+    provider = "prisma-client-js"
 }
 
 datasource db {
-  provider = "postgresql"
-  url = env("PRISMA_CONNECTION_STRING") // uses connection pooling
-  directUrl = env("POSTGRES_URL_NON_POOLING") // uses a direct connection
-  shadowDatabaseUrl = env("POSTGRES_URL_NON_POOLING") // used for migrations
+    provider          = "postgresql"
+    url               = env("PRISMA_CONNECTION_STRING") // uses connection pooling
+    directUrl         = env("POSTGRES_URL_NON_POOLING") // uses a direct connection
+    shadowDatabaseUrl = env("POSTGRES_URL_NON_POOLING") // used for migrations
 }
 
 model User {
-  id        String  @id @default(uuid())
-  username 	String	@unique
-  email     String  @unique
-  password  String
-  admin		Boolean @default(false)
+    id       String  @id @default(uuid())
+    username String  @unique
+    email    String  @unique
+    password String
+    admin    Boolean @default(false)
+
+    posts     Post[]         @relation("PostsCreatedBy")
+    revisions PostRevision[] @relation("UserPostRevision")
 }
 
 model Post {
-	id			String @id @default(uuid())
+    id String @id @default(uuid())
 
-	createdAt	DateTime @default(now())
-	updatedAt	DateTime @updatedAt
-	removedAt	DateTime?
+    createdAt DateTime  @default(now())
+    updatedAt DateTime  @updatedAt
+    removedAt DateTime?
 
-	revisions	PostRevision[] @relation()
+    createdById String
+    createdBy   User   @relation("PostsCreatedBy", fields: [createdById], references: [id])
 
-	title		String
-	undertitle	String
-	content		String
+    revisions PostRevision[] @relation()
+
+    title      String
+    undertitle String
+    content    String
 }
 
 model PostRevision {
-	revisionId		String @id @default(uuid())
-	
-	post			Post @relation(fields: [postId], references: [id])
-	postId 			String
-	
-	field			String
-	value			String
+    revisionId String @id @default(uuid())
 
-	description		String?
+    post   Post   @relation(fields: [postId], references: [id])
+    postId String
 
-	createdAt		DateTime @default(now())
-	removedAt		DateTime?
+    field String
+    value String
+
+    description String?
+
+    createdAt DateTime @default(now())
+
+    createdById String
+    createdBy   User   @relation("UserPostRevision", fields: [createdById], references: [id])
 }
