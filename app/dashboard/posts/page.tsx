@@ -6,6 +6,7 @@ import { ReactNode } from "react";
 const PostsPage = async () => {
   const posts = await prisma.post.findMany({
     select: {
+      id: true,
       title: true,
       createdAt: true,
       updatedAt: true,
@@ -23,7 +24,7 @@ const PostsPage = async () => {
       </div>
       <List>
         {posts.map((p) => (
-          <ListItem title={p.title}></ListItem>
+          <ListItem key={`post-${p.id}`} title={p.title}></ListItem>
         ))}
       </List>
     </div>
