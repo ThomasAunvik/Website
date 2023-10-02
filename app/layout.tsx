@@ -2,8 +2,7 @@ import "@/styles/globals.css";
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import { Toaster } from "react-hot-toast";
-import { AuthStatus } from "@/components/AuthStatus";
-import { Suspense } from "react";
+import { Analytics } from "@vercel/analytics/react";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -32,6 +31,7 @@ export default function RootLayout({
       <body className={inter.className + " h-screen flex flex-col"}>
         <Toaster />
         <div className="flex flex-1 flex-col">{children}</div>
+        <Analytics />
       </body>
     </html>
   );
