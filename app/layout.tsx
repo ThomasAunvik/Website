@@ -31,7 +31,7 @@ export default function RootLayout({
     <html lang="en">
       <body className={inter.className + " h-screen flex flex-col"}>
         <Toaster />
-        <div className="flex-1">{children}</div>
+        <div className="flex flex-1 flex-col">{children}</div>
       </body>
     </html>
   );

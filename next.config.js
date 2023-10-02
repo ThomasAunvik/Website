@@ -3,7 +3,7 @@ const nextConfig = {
   swcMinify: true,
   images: {
     dangerouslyAllowSVG: true,
-    domains: ["raw.githubusercontent.com"],
+    domains: ["gh-stats.thaun.dev"],
     contentDispositionType: 'attachment',
     contentSecurityPolicy: "default-src 'self'; script-src 'none'; sandbox;",
   },
