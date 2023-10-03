@@ -60,19 +60,19 @@ export const ProfileSocials = () => {
   return (
     <ul className="flex flex-col space-y-2 w-full">
       {socials.map((s) => (
-        <li
-          key={`social-${s.id}`}
-          className="flex flex-row items-center justify-center md:justify-start"
-        >
-          <Link href={s.link} target="_blank">
-            {s.icon}
-          </Link>
+        <li key={`social-${s.id}`}>
           <Link
             href={s.link}
             target="_blank"
-            className="w-40 pl-2 hidden md:block"
+            className="flex flex-row items-center justify-center md:justify-start"
           >
-            {s.name}
+            <div>{s.icon}</div>
+            <div
+              aria-label={`${s.id} ${s.name}`}
+              className="w-40 pl-2 hidden md:block"
+            >
+              {s.name}
+            </div>
           </Link>
         </li>
       ))}

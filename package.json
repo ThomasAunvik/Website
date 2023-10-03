@@ -7,7 +7,10 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "eslint": "eslint . --fix --config .eslintrc.json --ext .ts,.tsx",
+    "eslint:files": "yarn eslint | grep -e '^/.*tsx$' -e '^/.*ts$'",
+    "eslint:files:open": "code $(yarn --silent eslint:files)"
   },
   "dependencies": {
     "@emotion/react": "^11.11.1",
@@ -41,6 +44,10 @@
   },
   "devDependencies": {
     "@types/bcrypt": "^5.0.0",
+    "eslint-config-prettier": "^9.0.0",
+    "eslint-plugin-jsx-a11y": "^6.7.1",
+    "eslint-plugin-prettier": "^5.0.0",
+    "prettier": "3.0.3",
     "prisma": "^5.3.1"
   }
 }

@@ -5,38 +5,32 @@ import Link from "next/link";
 export const ProfileEmails = () => {
   return (
     <ul className="flex flex-col space-y-2 w-full">
-      <li className="flex flex-row items-center justify-center md:justify-start">
-        <Link href="mailto:contact@thaun.dev">
-          <FontAwesomeIcon icon={faEnvelope} className="w-6" />
-        </Link>
+      <li>
         <Link
           href="mailto:contact@thaun.dev"
-          className="w-60 pl-2 hidden md:block"
+          className="flex flex-row items-center justify-center md:justify-start"
         >
-          contact@thaun.dev
+          <FontAwesomeIcon icon={faEnvelope} className="w-6" />
+          <span className="w-60 pl-2 hidden md:block">contact@thaun.dev</span>
         </Link>
       </li>
-      <li className="flex flex-row items-center justify-center md:justify-start">
-        <Link href="mailto:contact@thaun.dev">
-          <FontAwesomeIcon icon={faEnvelope} className="w-6" />
-        </Link>
+      <li>
         <Link
           href="mailto:contact@thaun.no"
-          className="w-60 pl-2 hidden md:block"
+          className="flex flex-row items-center justify-center md:justify-start"
         >
-          contact@thaun.no
+          <FontAwesomeIcon icon={faEnvelope} className="w-6" />
+          <span className="w-60 pl-2 hidden md:block">contact@thaun.no</span>
         </Link>
       </li>
-      <li className="flex flex-row items-center justify-center md:justify-start">
-        <Link href="gpgcard.txt" target="_blank">
-          <FontAwesomeIcon icon={faLock} className="w-6" />
-        </Link>
+
+      <li>
         <Link
           href="/gpgcard.txt"
-          target="_blank"
-          className="w-60 pl-2 hidden md:block"
+          className="flex flex-row items-center justify-center md:justify-start"
         >
-          PGP Public Key
+          <FontAwesomeIcon icon={faLock} className="w-6" />
+          <span className="w-60 pl-2 hidden md:block">PGP Public Key</span>
         </Link>
       </li>
     </ul>

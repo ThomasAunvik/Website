@@ -7,7 +7,7 @@ import prisma_edge from "@/lib/prisma_edge";
 
 async function middleware(
   req: NextRequestWithAuth,
-  _: NextFetchEvent
+  _: NextFetchEvent,
 ): Promise<NextResponse<unknown>> {
   // Get the pathname of the request (e.g. /, /protected)
   const path = req.nextUrl.pathname;

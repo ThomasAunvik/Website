@@ -5,6 +5,7 @@ import {
   useEffect,
   MouseEventHandler,
   LegacyRef,
+  KeyboardEventHandler,
 } from "react";
 import { useRouter } from "next/navigation";
 
@@ -23,26 +24,24 @@ export default function Modal({ children }: { children: React.ReactNode }) {
         if (onDismiss) onDismiss();
       }
     },
-    [onDismiss, overlay, wrapper]
+    [onDismiss, overlay, wrapper],
   );
 
   const onKeyDown = useCallback(
     (e: KeyboardEvent) => {
       if (e.key === "Escape") onDismiss();
     },
-    [onDismiss]
+    [onDismiss],
   );
-
-  useEffect(() => {
-    document.addEventListener("keydown", onKeyDown);
-    return () => document.removeEventListener("keydown", onKeyDown);
-  }, [onKeyDown]);
 
   return (
     <div
       ref={overlay}
       className="fixed z-10 left-0 right-0 top-0 bottom-0 mx-auto bg-black/60"
       onClick={onClick}
+      onKeyDown={(e) => onKeyDown(e as unknown as KeyboardEvent)}
+      role="button"
+      tabIndex={0}
     >
       <div
         ref={wrapper}

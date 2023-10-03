@@ -20,12 +20,12 @@ export async function POST(req: Request) {
   if (emailExist) {
     return NextResponse.json(
       { error: "Email already exists" },
-      { status: 400 }
+      { status: 400 },
     );
   } else if (usernameExist) {
     return NextResponse.json(
       { error: "Username already exists" },
-      { status: 400 }
+      { status: 400 },
     );
   } else {
     const user = await prisma.user.create({
