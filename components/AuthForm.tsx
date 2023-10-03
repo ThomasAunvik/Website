@@ -7,7 +7,14 @@ import toast from "react-hot-toast";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 
-export const AuthForm = ({ type }: { type: "login" | "register" }) => {
+export interface AuthFormProps {
+  type: "login" | "register";
+  isModal?: boolean;
+}
+
+export const AuthForm = (props: AuthFormProps) => {
+  const { type, isModal } = props;
+
   const [loading, setLoading] = useState(false);
   const router = useRouter();
 
@@ -29,7 +36,11 @@ export const AuthForm = ({ type }: { type: "login" | "register" }) => {
               toast.error(error);
             } else {
               router.refresh();
-              router.push("/");
+              if (isModal) {
+                router.back();
+              } else {
+                router.push("/");
+              }
             }
           });
         } else {

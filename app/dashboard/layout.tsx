@@ -22,15 +22,19 @@ export const metadata: Metadata = {
   themeColor: "#FFF",
 };
 
-export default function DashboardLayout({
-  children,
-}: {
+interface DashboardLayoutProps {
   children: React.ReactNode;
-}) {
+  modal: React.ReactNode;
+}
+
+export default function DashboardLayout(props: DashboardLayoutProps) {
+  const { children, modal } = props;
+
   return (
     <ThemeRegistry options={{ key: "mui" }}>
       <MiniDrawer>
         <section>{children}</section>
+        {modal}
       </MiniDrawer>
     </ThemeRegistry>
   );

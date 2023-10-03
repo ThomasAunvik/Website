@@ -57,15 +57,6 @@ export default function Home() {
             <GithubStatsOverview />
             <GithubStatsLanguages />
           </div>
-          <div>
-            <a href="/login">Login Please...</a>
-          </div>
-          <div>
-            <a href="/register">Or Register</a>
-          </div>
-          <div>
-            <a href="/signout">If you are logged in...</a>
-          </div>
         </div>
       </div>
     </main>

@@ -21,16 +21,20 @@ export const metadata: Metadata = {
   themeColor: "#FFF",
 };
 
-export default function RootLayout({
-  children,
-}: {
+interface RootLayoutProps {
   children: React.ReactNode;
-}) {
+  authmodal: React.ReactNode;
+}
+
+export default function RootLayout(props: RootLayoutProps) {
+  const { children, authmodal } = props;
+
   return (
     <html lang="en">
       <body
         className={inter.className + " h-screen flex flex-col pretty-scrollbar"}
       >
+        {authmodal}
         <Toaster />
         <div className="flex flex-1 flex-col">{children}</div>
         <Analytics />

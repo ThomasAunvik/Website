@@ -7,8 +7,8 @@ import "@fontsource/roboto/400.css";
 import "@fontsource/roboto/500.css";
 import "@fontsource/roboto/700.css";
 
-const title = "Thaun.Dev Dashboard";
-const description = "Thaun's Dashboard";
+const title = "Thaun.Dev";
+const description = "Thaun's";
 
 export const metadata: Metadata = {
   title: title,
@@ -22,18 +22,12 @@ export const metadata: Metadata = {
   themeColor: "#FFF",
 };
 
-interface PostEditProps {
+interface AuthLayoutProps {
   children: React.ReactNode;
 }
 
-export default function PostEditLayout(props: PostEditProps) {
+export default function AuthLayout(props: AuthLayoutProps) {
   const { children } = props;
 
-  return (
-    <ThemeRegistry options={{ key: "mui" }}>
-      <MiniDrawer>
-        <section>{children}</section>
-      </MiniDrawer>
-    </ThemeRegistry>
-  );
+  return <section>{children}</section>;
 }
