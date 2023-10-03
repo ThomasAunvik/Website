@@ -1,5 +1,3 @@
-import { ReactNode } from "react";
-
 import HomeIcon from "@mui/icons-material/Home";
 import NewspaperIcon from "@mui/icons-material/Newspaper";
 import LogoutIcon from "@mui/icons-material/Logout";
@@ -10,7 +8,7 @@ export interface DrawerItem {
   name: string;
   href: string;
   hrefExact?: boolean;
-  icon: () => ReactNode;
+  icon: () => JSX.Element;
 }
 
 export interface DrawerCategory {
