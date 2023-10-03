@@ -10,9 +10,6 @@ import Typography from "@mui/material/Typography";
 import Divider from "@mui/material/Divider";
 import IconButton from "@mui/material/IconButton";
 
-import HomeIcon from "@mui/icons-material/Home";
-import NewspaperIcon from "@mui/icons-material/Newspaper";
-import LogoutIcon from "@mui/icons-material/Logout";
 import MenuIcon from "@mui/icons-material/Menu";
 import ChevronLeftIcon from "@mui/icons-material/ChevronLeft";
 import ChevronRightIcon from "@mui/icons-material/ChevronRight";
@@ -20,9 +17,8 @@ import ListItem from "@mui/material/ListItem";
 import ListItemButton from "@mui/material/ListItemButton";
 import ListItemIcon from "@mui/material/ListItemIcon";
 import ListItemText from "@mui/material/ListItemText";
-import MailIcon from "@mui/icons-material/Mail";
 
-import { useEffect, useState } from "react";
+import { ReactNode, useEffect, useState } from "react";
 
 import drawerCategories from "./DrawerItems";
 import Link from "next/link";
@@ -100,7 +96,7 @@ const Drawer = styled(MuiDrawer, {
 }));
 
 export interface MiniDrawerProps {
-  children: React.ReactNode;
+  children: ReactNode;
 }
 
 export default function MiniDrawer(props: MiniDrawerProps) {
@@ -196,7 +192,7 @@ export default function MiniDrawer(props: MiniDrawerProps) {
       </Drawer>
       <Box component="main" sx={{ flexGrow: 1, p: 3 }}>
         <DrawerHeader />
-        {children}
+        <div>{children}</div>
       </Box>
     </Box>
   );
