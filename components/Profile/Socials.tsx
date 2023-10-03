@@ -65,6 +65,7 @@ export const ProfileSocials = () => {
             href={s.link}
             target="_blank"
             className="flex flex-row items-center justify-center md:justify-start"
+            aria-label={`${s.id} ${s.name}`}
           >
             <div>{s.icon}</div>
             <div

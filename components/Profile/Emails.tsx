@@ -9,6 +9,7 @@ export const ProfileEmails = () => {
         <Link
           href="mailto:contact@thaun.dev"
           className="flex flex-row items-center justify-center md:justify-start"
+          aria-label="Email contact@thaun.dev"
         >
           <FontAwesomeIcon icon={faEnvelope} className="w-6" />
           <span className="w-60 pl-2 hidden md:block">contact@thaun.dev</span>
@@ -18,6 +19,7 @@ export const ProfileEmails = () => {
         <Link
           href="mailto:contact@thaun.no"
           className="flex flex-row items-center justify-center md:justify-start"
+          aria-label="Email contact@thaun.no"
         >
           <FontAwesomeIcon icon={faEnvelope} className="w-6" />
           <span className="w-60 pl-2 hidden md:block">contact@thaun.no</span>
@@ -28,6 +30,7 @@ export const ProfileEmails = () => {
         <Link
           href="/gpgcard.txt"
           className="flex flex-row items-center justify-center md:justify-start"
+          aria-label="Email PGP Public Key"
         >
           <FontAwesomeIcon icon={faLock} className="w-6" />
           <span className="w-60 pl-2 hidden md:block">PGP Public Key</span>
