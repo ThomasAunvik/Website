@@ -1,4 +1,4 @@
-import "@/styles/globals.css";
+import "@/styles/globals.scss";
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import { Toaster } from "react-hot-toast";
@@ -28,7 +28,9 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
-      <body className={inter.className + " h-screen flex flex-col"}>
+      <body
+        className={inter.className + " h-screen flex flex-col pretty-scrollbar"}
+      >
         <Toaster />
         <div className="flex flex-1 flex-col">{children}</div>
         <Analytics />

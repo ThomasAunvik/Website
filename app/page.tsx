@@ -15,7 +15,7 @@ export default function Home() {
   return (
     <main className="flex flex-1 h-max max-w-screen flex-row items-start flex-wrap">
       <div className="h-full w-14 md:w-80 bg-red-600">
-        <div className="flex flex-col items-center overflow-y-scroll max-h-screen md:p-5">
+        <div className="flex flex-col items-center top-0 sticky pretty-scrollbar overflow-y-auto overflow-x-clip max-h-screen md:p-5">
           <h1 className="text-3xl hidden md:block">Thomas Aunvik</h1>
           <h2 className="hidden md:block">Aka. Thaun_</h2>
           <div className="flex flex-col items-center pt-5">
@@ -44,7 +44,7 @@ export default function Home() {
           </Suspense>
         </div>
       </div>
-      <div className="flex-1">
+      <div className="flex-1 pretty-scrollbar">
         <Suspense fallback="Loading...">
           <AuthStatus />
         </Suspense>
