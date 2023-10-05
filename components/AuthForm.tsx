@@ -6,6 +6,8 @@ import LoadingDots from "@/components/Loading/LoadingDots";
 import toast from "react-hot-toast";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
+import { faGithub } from "@fortawesome/free-brands-svg-icons/faGithub";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
 export interface AuthFormProps {
   type: "login" | "register";
@@ -57,9 +59,9 @@ export const AuthForm = (props: AuthFormProps) => {
           }).then(async (res) => {
             setLoading(false);
             if (res.status === 200) {
-              toast.success("Account created! Redirecting to login...");
+              toast.success("Account created! Redirecting to home...");
               setTimeout(() => {
-                router.push("/login");
+                router.push("/");
               }, 2000);
             } else {
               const { error } = await res.json();
@@ -121,6 +123,7 @@ export const AuthForm = (props: AuthFormProps) => {
           className="mt-1 block w-full appearance-none rounded-md border border-gray-300 px-3 py-2 placeholder-gray-400 shadow-sm focus:border-black focus:outline-none focus:ring-black sm:text-sm"
         />
       </div>
+
       <button
         disabled={loading}
         className={`${
@@ -135,10 +138,25 @@ export const AuthForm = (props: AuthFormProps) => {
           <p>{type === "login" ? "Sign In" : "Sign Up"}</p>
         )}
       </button>
+      <button
+        type="button"
+        onClick={() => {
+          signIn("github");
+        }}
+        className={`${"border-black bg-black text-white hover:bg-white hover:text-black"} flex h-10 w-full items-center justify-center rounded-md border text-sm transition-all focus:outline-none`}
+      >
+        <p>
+          Sign In with <FontAwesomeIcon icon={faGithub} />
+        </p>
+      </button>
       {type === "login" ? (
         <p className="text-center text-sm text-gray-600">
           Don&apos;t have an account?{" "}
-          <Link href="/register" className="font-semibold text-gray-800">
+          <Link
+            href="/register"
+            target="_blank"
+            className="font-semibold text-gray-800"
+          >
             Sign up
           </Link>{" "}
           for free.

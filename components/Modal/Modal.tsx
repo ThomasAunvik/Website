@@ -1,12 +1,5 @@
 "use client";
-import {
-  useCallback,
-  useRef,
-  useEffect,
-  MouseEventHandler,
-  LegacyRef,
-  KeyboardEventHandler,
-} from "react";
+import { useCallback, useRef, MouseEventHandler } from "react";
 import { useRouter } from "next/navigation";
 
 export default function Modal({ children }: { children: React.ReactNode }) {

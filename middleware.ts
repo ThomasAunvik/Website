@@ -29,8 +29,10 @@ async function middleware(
 
 const middlewareOptions: NextAuthMiddlewareOptions = {
   callbacks: {
-    authorized: async ({ token }) => {
+    authorized: async ({ token, req }) => {
       const email = token?.email;
+
+      console.log(email);
 
       if (!email || email === "") return false;
 
@@ -40,7 +42,7 @@ const middlewareOptions: NextAuthMiddlewareOptions = {
         },
       });
 
-      return user?.admin == true;
+      return user != null;
     },
   },
   pages: {

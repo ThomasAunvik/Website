@@ -1,8 +1,19 @@
-import NextAuth, { DefaultSession } from "next-auth";
+import NextAuth, {
+  DefaultSession,
+  Session as SessionModel,
+  JWT as JWTModel,
+} from "next-auth";
 import { User as UserModel } from "@prisma/client";
+import { DefaultJWT } from "next-auth/jwt";
+import { SessionUser } from "@/lib/auth_options";
 
 declare module "next-auth" {
-  interface User extends UserModel {
-    id: String; // <- here it is
+  interface Session extends SessionModel {
+    userId: string;
+    user: SessionUser;
+  }
+
+  interface JWT extends JWTModel {
+    userId: string;
   }
 }
