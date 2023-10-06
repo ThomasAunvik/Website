@@ -4,6 +4,7 @@ import withAuth, {
 } from "next-auth/middleware";
 import { NextFetchEvent, NextResponse } from "next/server";
 import prisma_edge from "@/lib/prisma_edge";
+import { PrismaAdapter } from "@auth/prisma-adapter";
 
 async function middleware(
   req: NextRequestWithAuth,
@@ -30,13 +31,31 @@ async function middleware(
 const middlewareOptions: NextAuthMiddlewareOptions = {
   callbacks: {
     authorized: async ({ token, req }) => {
-      const email = token?.email;
+      if (!token || token.email == "") {
+        const cookieHandler = req.cookies;
+        const sessionToken = cookieHandler.get("next-auth.session-token");
+        if (!sessionToken) return false;
 
-      if (!email || email === "") return false;
+        const adapter = PrismaAdapter(prisma_edge);
+        const getSession = adapter.getSessionAndUser;
+        if (!getSession) return false;
+
+        const sessionRes = await getSession(sessionToken.value);
+        if (!sessionRes) return false;
+
+        const userId = sessionRes.session.userId;
+        const user = await prisma_edge.user.findUnique({
+          where: {
+            id: userId,
+          },
+        });
+
+        return user != null;
+      }
 
       const user = await prisma_edge.user.findUnique({
         where: {
-          email: token!.email ?? "",
+          email: token.email ?? "",
         },
       });
 
@@ -52,4 +71,4 @@ const middlewareOptions: NextAuthMiddlewareOptions = {
 
 export default withAuth(middleware, middlewareOptions);
 
-export const config = { matcher: ["/dashboard"] };
+export const config = { matcher: ["/dashboard", "/account"] };

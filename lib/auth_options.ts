@@ -30,7 +30,10 @@ export const authOptions: NextAuthOptions = {
       return session;
     },
     async jwt({ token, user, account, profile }) {
-      return token;
+      return {
+        ...token,
+        userId: user.id,
+      };
     },
     async redirect({ url, baseUrl }) {
       // Do not allow login/signout redirects
