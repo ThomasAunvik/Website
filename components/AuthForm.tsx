@@ -8,6 +8,7 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { faGithub } from "@fortawesome/free-brands-svg-icons/faGithub";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { PasswordlessLogin } from "./Account/PasswordlessLogin";
 
 export interface AuthFormProps {
   type: "login" | "register";
@@ -138,6 +139,7 @@ export const AuthForm = (props: AuthFormProps) => {
           <p>{type === "login" ? "Sign In" : "Sign Up"}</p>
         )}
       </button>
+      <PasswordlessLogin isModal={isModal} />
       <button
         type="button"
         onClick={() => {

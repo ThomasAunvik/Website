@@ -8,7 +8,7 @@ import { PrismaAdapter } from "@auth/prisma-adapter";
 import prisma_edge from "@/lib/prisma_edge";
 import { NextRequest, NextResponse } from "next/server";
 
-const handler = async (req: NextApiRequest, res: NextApiResponse) => {
+const handler = async (req: NextRequest, res: any) => {
   const adapter = PrismaAdapter(prisma_edge);
 
   const callbacks: Partial<CallbacksOptions> = {
@@ -16,10 +16,9 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
       // Check if this sign in callback is being called in the credentials authentication flow. If so, use the next-auth adapter to create a session entry in the database (SignIn is called after authorize so we can safely assume the user is valid and already authenticated).
       if (
         req.url?.includes("callback") &&
-        req.url?.includes("credentials") &&
+        (req.url?.includes("credentials") || req.url?.includes("passkey")) &&
         req.method === "POST"
       ) {
-        console.log("Test");
         if (user && adapter) {
           const sessionToken = generateSessionToken(); // Implement a function to generate the session token (you can use randomUUID as an example)
           const sessionMaxAge = 60 * 60 * 24 * 30; //30Days
@@ -47,13 +46,11 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
     encode: async ({ token, secret, maxAge }) => {
       if (
         req.url?.includes("callback") &&
-        req.url?.includes("credentials") &&
+        (req.url?.includes("credentials") || req.url?.includes("passkey")) &&
         req.method === "POST"
       ) {
         const cookieHandler = cookies();
         const cookie = cookieHandler.get("next-auth.session-token");
-
-        // console.log("pure Cookie: ", cookie);
 
         if (cookie) return cookie.value;
         else return "";
@@ -64,7 +61,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
     decode: async ({ token, secret }) => {
       if (
         req.url?.includes("callback") &&
-        req.url?.includes("credentials") &&
+        (req.url?.includes("credentials") || req.url?.includes("passkey")) &&
         req.method === "POST"
       ) {
         return null;

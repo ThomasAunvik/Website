@@ -7,6 +7,7 @@ import { Prisma } from "@prisma/client";
 import { PrismaAdapter } from "@auth/prisma-adapter";
 
 import GithubProvider from "next-auth/providers/github";
+import { verifyPasswordless } from "./passwordless";
 
 const getSessionUser = async (userId: string) => {
   return await prisma.user.findUniqueOrThrow({
@@ -114,6 +115,38 @@ export const authOptions: NextAuthOptions = {
         return userData;
       },
     }),
+    CredentialsProvider({
+      id: "passkey",
+      name: "passkey",
+      credentials: {
+        passkey: { label: "Passkey", type: "passkey" },
+      },
+      async authorize(login) {
+        const { passkey } = login ?? {};
+        if (!passkey) {
+          throw new Error("Missing username or passkey");
+        }
+
+        const response = await verifyPasswordless(passkey);
+        if (!response.success) {
+          throw new Error("Invalid Passkey");
+        }
+
+        const user = await prisma.user.findUnique({
+          where: {
+            id: response.userId,
+          },
+        });
+
+        if (!user) {
+          // Sleep so that it doesn't immidiately fail if no user exist
+          await new Promise((r) => setTimeout(r, 2000));
+          throw new Error("Invalid Passkey");
+        }
+
+        return user;
+      },
+    }),
   ],
 };
 
@@ -164,7 +197,6 @@ export const generateStoredPassword = async (password: string) => {
 export const verifyPassword = async (input: string, pass: Password) => {
   const digest = pass.credentialsData.algorithm.split("-")[1];
 
-  console.log("");
   return await verifyCredential(
     input,
     Buffer.from(pass.secretData.salt, "base64"),

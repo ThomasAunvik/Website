@@ -524,6 +524,11 @@
   resolved "https://registry.npmjs.org/@panva/hkdf/-/hkdf-1.1.1.tgz"
   integrity sha512-dhPeilub1NuIG0X5Kvhh9lH4iW3ZsHlnzwgwbOlgwQ2wG1IqFzsgHqmKPk3WzsdWAeaxKJxgM0+W433RmN45GA==
 
+"@passwordlessdev/passwordless-client@^1.1.2":
+  version "1.1.2"
+  resolved "https://registry.yarnpkg.com/@passwordlessdev/passwordless-client/-/passwordless-client-1.1.2.tgz#9cfc7e0d8152210b02fc7c55cea99b1817adbf3e"
+  integrity sha512-Ji4CC+igHsz/UF410v7MGXsax65yOZQOdvDfDg3hNKSNMux1DtKvD1dphfgDmau5mgI1qEVcZutSI/uDDCzJAg==
+
 "@pkgr/utils@^2.3.1":
   version "2.4.2"
   resolved "https://registry.yarnpkg.com/@pkgr/utils/-/utils-2.4.2.tgz#9e638bbe9a6a6f165580dc943f138fd3309a2cbc"

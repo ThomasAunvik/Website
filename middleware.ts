@@ -32,8 +32,6 @@ const middlewareOptions: NextAuthMiddlewareOptions = {
     authorized: async ({ token, req }) => {
       const email = token?.email;
 
-      console.log(email);
-
       if (!email || email === "") return false;
 
       const user = await prisma_edge.user.findUnique({
