@@ -1,8 +1,10 @@
+import { authOptions } from "@/lib/auth_options";
 import { getServerSession } from "next-auth";
+import { getToken } from "next-auth/jwt";
 import Link from "next/link";
 
 export const AuthStatus = async () => {
-  const session = await getServerSession();
+  const session = await getServerSession(authOptions);
 
   if (!session) return;
 

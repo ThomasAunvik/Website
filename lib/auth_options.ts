@@ -19,6 +19,7 @@ const getSessionUser = async (userId: string) => {
 export type SessionUser = Prisma.PromiseReturnType<typeof getSessionUser>;
 
 export const authOptions: NextAuthOptions = {
+  secret: process.env.NEXTAUTH_SECRET,
   adapter: PrismaAdapter(prisma),
   session: { strategy: "database" },
   callbacks: {
@@ -29,6 +30,17 @@ export const authOptions: NextAuthOptions = {
     },
     async jwt({ token, user, account, profile }) {
       return token;
+    },
+    async redirect({ url, baseUrl }) {
+      // Do not allow login/signout redirects
+      if (url.startsWith(`${baseUrl}/login`)) return baseUrl;
+      if (url.startsWith(`${baseUrl}/signout`)) return baseUrl;
+
+      // Allows relative callback URLs
+      if (url.startsWith("/")) return `${baseUrl}${url}`;
+      // Allows callback URLs on the same origin
+      if (new URL(url).origin === baseUrl) return url;
+      return baseUrl;
     },
   },
   providers: [
@@ -62,7 +74,7 @@ export const authOptions: NextAuthOptions = {
           throw new Error("Invalid username or password");
         }
 
-        const credentials = user.credentials;
+        const { credentials, ...userData } = user;
 
         var loggedIn = false;
         for (
@@ -99,13 +111,7 @@ export const authOptions: NextAuthOptions = {
           throw new Error("Invalid username or password");
         }
 
-        const loggedInUser = await prisma.user.findUnique({
-          where: {
-            id: user.id,
-          },
-        });
-
-        return loggedInUser;
+        return userData;
       },
     }),
   ],

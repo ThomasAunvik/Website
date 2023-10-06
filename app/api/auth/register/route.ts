@@ -4,17 +4,6 @@ import { hash } from "bcryptjs";
 import crypto from "crypto";
 import { generateStoredPassword } from "@/lib/auth_options";
 
-interface PasswordGenerated {
-  secretData: {
-    value: string;
-    salt: string;
-  };
-  credentialsData: {
-    hashIteration: number;
-    algorithm: string;
-  };
-}
-
 const getPasswordDataFromUser = async (email: string) => {
   const user = await prisma.user.findUnique({
     where: {
