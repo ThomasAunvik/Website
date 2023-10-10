@@ -13,7 +13,7 @@ const ResponsiveImage = (props: MDImageProps) => {
 
   function getProperty<T>(...property: string[]) {
     const prop = config.find((c) =>
-      property.find((p) => c.startsWith(p + ":")),
+      property.find((p) => c.startsWith(p + ":"))
     );
 
     if (!prop) return undefined;
@@ -35,6 +35,9 @@ export const PostPreview = () => {
   return (
     <article className="prose dark:prose-invert lg:prose-xl text-white">
       <MDXRemote
+        options={{
+          mdxOptions: { development: process.env.NODE_ENV === "development" },
+        }}
         components={{
           img: ResponsiveImage as (props: any) => JSX.Element,
         }}
