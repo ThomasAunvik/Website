@@ -1,15 +1,16 @@
 import withAuth, {
   NextAuthMiddlewareOptions,
+  NextMiddlewareWithAuth,
   NextRequestWithAuth,
 } from "next-auth/middleware";
 import { NextFetchEvent, NextResponse } from "next/server";
 import prisma_edge from "@/lib/prisma_edge";
 import { PrismaAdapter } from "@auth/prisma-adapter";
 
-async function middleware(
+const middleware: NextMiddlewareWithAuth = (
   req: NextRequestWithAuth,
   _: NextFetchEvent,
-): Promise<NextResponse<unknown>> {
+) => {
   // Get the pathname of the request (e.g. /, /protected)
   const path = req.nextUrl.pathname;
 
@@ -26,7 +27,7 @@ async function middleware(
     return NextResponse.redirect(new URL("/signout", req.url));
   }
   return NextResponse.next();
-}
+};
 
 const middlewareOptions: NextAuthMiddlewareOptions = {
   callbacks: {

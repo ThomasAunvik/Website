@@ -13,7 +13,7 @@ const ResponsiveImage = (props: MDImageProps) => {
 
   function getProperty<T>(...property: string[]) {
     const prop = config.find((c) =>
-      property.find((p) => c.startsWith(p + ":"))
+      property.find((p) => c.startsWith(p + ":")),
     );
 
     if (!prop) return undefined;
