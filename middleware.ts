@@ -3,14 +3,13 @@ import withAuth, {
   NextMiddlewareWithAuth,
   NextRequestWithAuth,
 } from "next-auth/middleware";
-import { NextFetchEvent, NextResponse } from "next/server";
+import { NextResponse } from "next/server";
 import prisma_edge from "@/lib/prisma_edge";
 import { PrismaAdapter } from "@auth/prisma-adapter";
 import { NextMiddlewareResult } from "next/dist/server/web/types";
 
 const middleware: NextMiddlewareWithAuth = async (
   request: NextRequestWithAuth,
-  _event: NextFetchEvent,
 ): Promise<NextMiddlewareResult> => {
   // Get the pathname of the request (e.g. /, /protected)
   const path = request.nextUrl.pathname;
