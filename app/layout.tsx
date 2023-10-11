@@ -3,6 +3,8 @@ import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import { Toaster } from "react-hot-toast";
 import { Analytics } from "@vercel/analytics/react";
+import { Suspense } from "react";
+import { PHProvider, PostHogPageview } from "@/lib/providers";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -31,14 +33,22 @@ export default function RootLayout(props: RootLayoutProps) {
 
   return (
     <html lang="en">
-      <body
-        className={inter.className + " h-screen flex flex-col pretty-scrollbar"}
-      >
-        {authmodal}
-        <Toaster />
-        <div className="flex flex-1 flex-col">{children}</div>
-        <Analytics />
-      </body>
+      {" "}
+      <Suspense>
+        <PostHogPageview />
+      </Suspense>
+      <PHProvider>
+        <body
+          className={
+            inter.className + " h-screen flex flex-col pretty-scrollbar"
+          }
+        >
+          {authmodal}
+          <Toaster />
+          <div className="flex flex-1 flex-col">{children}</div>
+          <Analytics />
+        </body>
+      </PHProvider>
     </html>
   );
 }

@@ -10,8 +10,16 @@ import {
   GithubStatsLanguages,
   GithubStatsOverview,
 } from "@/components/Profile/GithubStats";
+import PostHogClient from "@/lib/posthog";
+import { getServerSession } from "next-auth";
 
-export default function Home() {
+const Home = async () => {
+  const session = await getServerSession();
+
+  const posthog = PostHogClient();
+  const flags = await posthog.getAllFlags(session?.userId ?? "unknown");
+  await posthog.shutdownAsync();
+
   return (
     <main className="flex flex-1 h-max max-w-screen flex-row items-start flex-wrap">
       <div className="h-full w-14 md:w-80 bg-red-600">
@@ -61,4 +69,6 @@ export default function Home() {
       </div>
     </main>
   );
-}
+};
+
+export default Home;
