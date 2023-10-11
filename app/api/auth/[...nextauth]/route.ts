@@ -8,7 +8,7 @@ import { PrismaAdapter } from "@auth/prisma-adapter";
 import prisma_edge from "@/lib/prisma_edge";
 import { NextRequest, NextResponse } from "next/server";
 
-const handler = async (req: NextRequest, res: any) => {
+const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   const adapter = PrismaAdapter(prisma_edge);
 
   const callbacks: Partial<CallbacksOptions> = {
