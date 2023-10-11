@@ -6,6 +6,6 @@
     "plugin:prettier/recommended"
   ],
   "rules": {
-    "prettier/prettier": "warning"
+    "prettier/prettier": "warn"
   }
 }
