@@ -8,7 +8,11 @@ import { PrismaAdapter } from "@auth/prisma-adapter";
 import prisma_edge from "@/lib/prisma_edge";
 import { NextRequest, NextResponse } from "next/server";
 
-const handler = async (req: NextApiRequest, res: NextApiResponse) => {
+interface RouteHandlerContext {
+  params: { nextauth: string[] };
+}
+
+const handler = async (req: Request, res: Response) => {
   const adapter = PrismaAdapter(prisma_edge);
 
   const callbacks: Partial<CallbacksOptions> = {
@@ -84,8 +88,11 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
       ...jwtOptions,
     },
   };
-
-  return NextAuth(req, res, options);
+  return NextAuth(
+    req as unknown as NextApiRequest,
+    res as unknown as NextApiResponse,
+    options,
+  );
 };
 
 export { handler as GET, handler as POST };
