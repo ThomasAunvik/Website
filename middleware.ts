@@ -6,25 +6,26 @@ import withAuth, {
 import { NextFetchEvent, NextResponse } from "next/server";
 import prisma_edge from "@/lib/prisma_edge";
 import { PrismaAdapter } from "@auth/prisma-adapter";
+import { NextMiddlewareResult } from "next/dist/server/web/types";
 
-const middleware: NextMiddlewareWithAuth = (
-  req: NextRequestWithAuth,
-  _: NextFetchEvent,
-) => {
+const middleware: NextMiddlewareWithAuth = async (
+  request: NextRequestWithAuth,
+  _event: NextFetchEvent,
+): Promise<NextMiddlewareResult> => {
   // Get the pathname of the request (e.g. /, /protected)
-  const path = req.nextUrl.pathname;
+  const path = request.nextUrl.pathname;
 
   // If it's the root path, just render it
   if (path === "/") {
     return NextResponse.next();
   }
 
-  const session = req.nextauth;
+  const session = request.nextauth;
 
   if (!session && path === "/signout") {
-    return NextResponse.redirect(new URL("/login", req.url));
+    return NextResponse.redirect(new URL("/login", request.url));
   } else if (session && (path === "/login" || path === "/register")) {
-    return NextResponse.redirect(new URL("/signout", req.url));
+    return NextResponse.redirect(new URL("/signout", request.url));
   }
   return NextResponse.next();
 };
