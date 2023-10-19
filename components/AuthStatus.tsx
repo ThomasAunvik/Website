@@ -1,6 +1,5 @@
 import { authOptions } from "@/lib/auth_options";
 import { getServerSession } from "next-auth";
-import { getToken } from "next-auth/jwt";
 import Link from "next/link";
 
 export const AuthStatus = async () => {

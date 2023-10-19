@@ -18,7 +18,7 @@ import ListItemButton from "@mui/material/ListItemButton";
 import ListItemIcon from "@mui/material/ListItemIcon";
 import ListItemText from "@mui/material/ListItemText";
 
-import { ReactNode, useEffect, useState } from "react";
+import { ReactNode, useState } from "react";
 
 import drawerCategories from "./DrawerItems";
 import Link from "next/link";
@@ -147,11 +147,11 @@ export default function MiniDrawer(props: MiniDrawerProps) {
             )}
           </IconButton>
         </DrawerHeader>
-        {drawerCategories.map((category, cI) => (
+        {drawerCategories.map((category) => (
           <div key={`category-${category.name}`}>
             <Divider />
             <List>
-              {category.items.map((item, iI) => (
+              {category.items.map((item) => (
                 <ListItem
                   key={`item-${item.name}`}
                   disablePadding

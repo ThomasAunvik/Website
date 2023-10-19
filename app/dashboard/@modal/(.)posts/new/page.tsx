@@ -1,7 +1,5 @@
 "use client";
 
-import { DrawerHeader } from "@/components/Dashboard/Drawer";
-import PostForm from "@/components/Dashboard/Posts/PostForm";
 import Modal from "@/components/Modal/Modal";
 
 const NewPostPage = () => {

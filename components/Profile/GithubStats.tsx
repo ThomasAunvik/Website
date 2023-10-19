@@ -1,5 +1,3 @@
-import Image from "next/image";
-
 export const GithubStatsLanguages = () => {
   return (
     // eslint-disable-next-line @next/next/no-img-element

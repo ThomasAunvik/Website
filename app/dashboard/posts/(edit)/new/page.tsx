@@ -1,4 +1,3 @@
-import { DrawerHeader } from "@/components/Dashboard/Drawer";
 import PostForm from "@/components/Dashboard/Posts/PostForm";
 
 const NewPostPage = () => {
