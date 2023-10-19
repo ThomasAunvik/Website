@@ -4,6 +4,10 @@ import { Inter } from "next/font/google";
 import { Toaster } from "react-hot-toast";
 import { Analytics } from "@vercel/analytics/react";
 
+import { config } from "@fortawesome/fontawesome-svg-core";
+import "@fortawesome/fontawesome-svg-core/styles.css";
+config.autoAddCss = false;
+
 const inter = Inter({ subsets: ["latin"] });
 
 const title = "Thaun.Dev";
@@ -34,7 +38,7 @@ export default function RootLayout(props: RootLayoutProps) {
       <body
         className={inter.className + " h-screen flex flex-col pretty-scrollbar"}
       >
-        {authmodal}
+        <div>{authmodal}</div>
         <Toaster />
         <div className="flex flex-1 flex-col">{children}</div>
         <Analytics />

@@ -1,35 +1,36 @@
-import prisma from "@/lib/prisma";
+import db from "@/db";
+import { PromiseReturnType } from "@/lib/utils/promise";
 import { Button, List, ListItem } from "@mui/material";
-import { Prisma } from "@prisma/client";
 import Link from "next/link";
-import { ReactNode } from "react";
 
 const getPosts = async () => {
-  const posts = await prisma.post.findMany({
-    select: {
-      id: true,
+  const posts = await db.query.postsTable.findMany({
+    columns: {
+      postId: true,
       title: true,
       createdAt: true,
-      updatedAt: true,
-      createdBy: true,
     },
+    with: {
+      createdBy: {
+        columns: {
+          id: true,
+          name: true,
+          username: true,
+          email: true,
+          image: true,
+        },
+      },
+    },
+    orderBy: (posts, { asc }) => [asc(posts.createdAt)],
   });
 
   return posts;
 };
 
-type PostList = Prisma.PromiseReturnType<typeof getPosts>;
+type PostList = PromiseReturnType<typeof getPosts>;
 
 const PostsPage = async () => {
-  const posts = await prisma.post.findMany({
-    select: {
-      id: true,
-      title: true,
-      createdAt: true,
-      updatedAt: true,
-      createdBy: true,
-    },
-  });
+  const posts = await getPosts();
 
   return (
     <div>
@@ -41,7 +42,7 @@ const PostsPage = async () => {
       </div>
       <List>
         {posts.map((p) => (
-          <ListItem key={`post-${p.id}`} title={p.title}></ListItem>
+          <ListItem key={`post-${p.postId}`} title={p.title}></ListItem>
         ))}
       </List>
     </div>

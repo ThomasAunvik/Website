@@ -1,27 +1,57 @@
 import { type NextAuthOptions } from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
-import prisma from "@/lib/prisma";
 import crypto from "crypto";
-import { JsonObject } from "@prisma/client/runtime/library";
-import { Prisma } from "@prisma/client";
-import { PrismaAdapter } from "@auth/prisma-adapter";
+import { DrizzleAdapter } from "@auth/drizzle-adapter";
 
 import GithubProvider from "next-auth/providers/github";
 import { verifyPasswordless } from "./passwordless";
+import db, {
+  accountsTable,
+  sessionsTable,
+  usersTable,
+  verificationTokensTable,
+} from "@/db";
+import { BuildColumns, eq } from "drizzle-orm";
+import { PromiseReturnType } from "./utils/promise";
+import {
+  PgColumnBuilderBase,
+  PgTableExtraConfig,
+  PgTableFn,
+} from "drizzle-orm/pg-core";
+import { dbSchema } from "@/db/schema/schema";
 
-const getSessionUser = async (userId: string) => {
-  return await prisma.user.findUniqueOrThrow({
-    where: {
-      id: userId,
-    },
+const getUser = async (userId: string) => {
+  return await db.query.usersTable.findFirst({
+    where: (users, { eq }) => eq(users.id, userId),
   });
 };
 
-export type SessionUser = Prisma.PromiseReturnType<typeof getSessionUser>;
+export type UserSession = PromiseReturnType<typeof getUser>;
+
+export const pgTableHijack: any = (
+  name: string,
+  columns: Record<string, PgColumnBuilderBase>,
+  extraConfig?: (
+    self: BuildColumns<string, Record<string, PgColumnBuilderBase>, "pg">,
+  ) => PgTableExtraConfig,
+) => {
+  switch (name) {
+    case "user":
+      return usersTable;
+    case "account":
+      return accountsTable;
+    case "session":
+      return sessionsTable;
+    case "verificationToken":
+      return verificationTokensTable;
+    default:
+      return dbSchema.table(name, columns, extraConfig);
+  }
+};
 
 export const authOptions: NextAuthOptions = {
   secret: process.env.NEXTAUTH_SECRET,
-  adapter: PrismaAdapter(prisma),
+  adapter: DrizzleAdapter(db, pgTableHijack as unknown as PgTableFn<undefined>),
   session: { strategy: "database" },
   callbacks: {
     async session({ session, user, token }) {
@@ -63,13 +93,9 @@ export const authOptions: NextAuthOptions = {
           throw new Error("Missing username or password");
         }
 
-        const user = await prisma.user.findUnique({
-          where: {
-            email: email,
-          },
-          include: {
-            credentials: true,
-          },
+        const user = await db.query.usersTable.findFirst({
+          where: (users, { eq }) => eq(users.email, email),
+          with: { credentials: true },
         });
 
         if (!user) {
@@ -79,6 +105,7 @@ export const authOptions: NextAuthOptions = {
         }
 
         const { credentials, ...userData } = user;
+        console.log("Timeout", user);
 
         var loggedIn = false;
         for (
@@ -90,15 +117,23 @@ export const authOptions: NextAuthOptions = {
             credentials[credentialIndex];
 
           if (type == "password") {
-            const { algorithm, hashIteration } = credentialsData as JsonObject;
-            const { value, salt } = secretData as JsonObject;
+            const { algorithm, hashIteration } = credentialsData as {
+              algorithm: string;
+              hashIteration: number;
+            };
+
+            const { value, salt } = secretData as {
+              value: string;
+              salt: string;
+            };
+
             if (
               await verifyPassword(password, {
                 credentialsData: {
-                  algorithm: algorithm as string,
-                  hashIteration: hashIteration as number,
+                  algorithm: algorithm,
+                  hashIteration: hashIteration,
                 },
-                secretData: { value: value as string, salt: salt as string },
+                secretData: { value: value, salt: salt },
               })
             ) {
               loggedIn = true;
@@ -135,10 +170,8 @@ export const authOptions: NextAuthOptions = {
           throw new Error("Invalid Passkey");
         }
 
-        const user = await prisma.user.findUnique({
-          where: {
-            id: response.userId,
-          },
+        const user = await db.query.usersTable.findFirst({
+          where: (users, { eq }) => eq(users.id, response.userId),
         });
 
         if (!user) {

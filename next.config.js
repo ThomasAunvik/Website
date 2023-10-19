@@ -4,12 +4,12 @@ const nextConfig = {
   images: {
     dangerouslyAllowSVG: true,
     domains: ["gh-stats.thaun.dev"],
-    contentDispositionType: 'attachment',
+    contentDispositionType: "attachment",
     contentSecurityPolicy: "default-src 'self'; script-src 'none'; sandbox;",
   },
   experimental: {
-    serverActions: true
-  }
+    serverActions: true,
+  },
 };
 
 module.exports = nextConfig;

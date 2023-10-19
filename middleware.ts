@@ -3,8 +3,10 @@ import withAuth, {
   NextRequestWithAuth,
 } from "next-auth/middleware";
 import { NextFetchEvent, NextResponse } from "next/server";
-import prisma_edge from "@/lib/prisma_edge";
-import { PrismaAdapter } from "@auth/prisma-adapter";
+import { DrizzleAdapter } from "@auth/drizzle-adapter";
+import db from "./db";
+import { pgTableHijack } from "./lib/auth_options";
+import { PgTableFn } from "drizzle-orm/pg-core";
 
 async function middleware(
   req: NextRequestWithAuth,
@@ -36,7 +38,10 @@ const middlewareOptions: NextAuthMiddlewareOptions = {
         const sessionToken = cookieHandler.get("next-auth.session-token");
         if (!sessionToken) return false;
 
-        const adapter = PrismaAdapter(prisma_edge);
+        const adapter = DrizzleAdapter(
+          db,
+          pgTableHijack as unknown as PgTableFn<undefined>,
+        );
         const getSession = adapter.getSessionAndUser;
         if (!getSession) return false;
 
@@ -44,19 +49,15 @@ const middlewareOptions: NextAuthMiddlewareOptions = {
         if (!sessionRes) return false;
 
         const userId = sessionRes.session.userId;
-        const user = await prisma_edge.user.findUnique({
-          where: {
-            id: userId,
-          },
+        const user = await db.query.usersTable.findFirst({
+          where: (users, { eq }) => eq(users.id, userId),
         });
 
         return user != null;
       }
 
-      const user = await prisma_edge.user.findUnique({
-        where: {
-          email: token.email ?? "",
-        },
+      const user = await db.query.usersTable.findFirst({
+        where: (users, { eq }) => eq(users.email, token.email ?? ""),
       });
 
       return user != null;

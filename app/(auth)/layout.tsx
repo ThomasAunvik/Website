@@ -1,11 +1,4 @@
-import MiniDrawer from "@/components/Dashboard/Drawer";
-import ThemeRegistry from "@/components/Dashboard/ThemeRegistry";
 import { Metadata } from "next";
-
-import "@fontsource/roboto/300.css";
-import "@fontsource/roboto/400.css";
-import "@fontsource/roboto/500.css";
-import "@fontsource/roboto/700.css";
 
 const title = "Thaun.Dev";
 const description = "Thaun's";

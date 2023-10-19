@@ -1,15 +1,11 @@
-import prisma from "@/lib/prisma";
 import { NextResponse } from "next/server";
-import { hash } from "bcryptjs";
-import crypto from "crypto";
 import { generateStoredPassword } from "@/lib/auth_options";
+import db, { credentialsTable, usersTable } from "@/db";
 
 const getPasswordDataFromUser = async (email: string) => {
-  const user = await prisma.user.findUnique({
-    where: {
-      email: email,
-    },
-    select: {
+  const user = await db.query.usersTable.findFirst({
+    where: (users, { eq }) => eq(users.email, email),
+    with: {
       credentials: true,
     },
   });
@@ -20,46 +16,44 @@ const getPasswordDataFromUser = async (email: string) => {
 export async function POST(req: Request) {
   const { username, email, password } = await req.json();
 
-  const emailExist = await prisma.user.findUnique({
-    where: {
-      email: email,
+  const exists = await db.query.usersTable.findFirst({
+    where: (users, { eq }) =>
+      eq(users.email, email) || eq(users.username, username),
+    with: {
+      credentials: true,
     },
   });
 
-  const usernameExist = await prisma.user.findUnique({
-    where: {
-      username: username,
-    },
-  });
-
-  if (emailExist) {
+  if (exists) {
     return NextResponse.json(
-      { error: "Email already exists" },
-      { status: 400 },
-    );
-  } else if (usernameExist) {
-    return NextResponse.json(
-      { error: "Username already exists" },
+      { error: "Username or Email already exists" },
       { status: 400 },
     );
   } else {
     const passStore = await generateStoredPassword(password);
 
-    const user = await prisma.user.create({
-      data: {
+    const create = await db
+      .insert(usersTable)
+      .values({
         username,
         email,
-        credentials: {
-          create: {
-            type: "password",
-            userLabel: "",
-            secretData: passStore.secretData,
-            credentialsData: passStore.credentialsData,
-            priority: 0,
-          },
-        },
-      },
+      })
+      .returning({ id: usersTable.id });
+
+    if (create.length <= 0) {
+      throw Error("Failed to create user...");
+    }
+    const createdUser = create[0];
+
+    await db.insert(credentialsTable).values({
+      userId: createdUser.id,
+      type: "password",
+      userLabel: "",
+      secretData: passStore.secretData,
+      credentialsData: passStore.credentialsData,
+      priority: 0,
     });
-    return NextResponse.json({ ...user });
+
+    return NextResponse.json({ id: createdUser.id });
   }
 }

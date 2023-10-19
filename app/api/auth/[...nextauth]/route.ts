@@ -1,15 +1,19 @@
 import NextAuth, { CallbacksOptions, NextAuthOptions } from "next-auth";
-import { authOptions } from "@/lib/auth_options";
+import { authOptions, pgTableHijack } from "@/lib/auth_options";
 import { NextApiRequest, NextApiResponse } from "next";
 import { cookies } from "next/headers";
 import { randomUUID } from "crypto";
 import { encode, decode, JWTOptions } from "next-auth/jwt";
-import { PrismaAdapter } from "@auth/prisma-adapter";
-import prisma_edge from "@/lib/prisma_edge";
 import { NextRequest, NextResponse } from "next/server";
+import { DrizzleAdapter } from "@auth/drizzle-adapter";
+import db from "@/db";
+import { PgTableFn } from "drizzle-orm/pg-core";
 
 const handler = async (req: NextRequest, res: any) => {
-  const adapter = PrismaAdapter(prisma_edge);
+  const adapter = DrizzleAdapter(
+    db,
+    pgTableHijack as unknown as PgTableFn<undefined>,
+  );
 
   const callbacks: Partial<CallbacksOptions> = {
     signIn: async ({ user, account, profile, email, credentials }) => {

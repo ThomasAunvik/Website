@@ -11,7 +11,7 @@ export const ProfileEmails = () => {
           className="flex flex-row items-center justify-center md:justify-start"
           aria-label="Email contact@thaun.dev"
         >
-          <FontAwesomeIcon icon={faEnvelope} className="w-6" />
+          <FontAwesomeIcon icon={faEnvelope} className="w-6 h-6" />
           <span className="w-60 pl-2 hidden md:block">contact@thaun.dev</span>
         </Link>
       </li>
@@ -21,7 +21,7 @@ export const ProfileEmails = () => {
           className="flex flex-row items-center justify-center md:justify-start"
           aria-label="Email contact@thaun.no"
         >
-          <FontAwesomeIcon icon={faEnvelope} className="w-6" />
+          <FontAwesomeIcon icon={faEnvelope} className="w-6 h-6" />
           <span className="w-60 pl-2 hidden md:block">contact@thaun.no</span>
         </Link>
       </li>
@@ -32,7 +32,7 @@ export const ProfileEmails = () => {
           className="flex flex-row items-center justify-center md:justify-start"
           aria-label="Email PGP Public Key"
         >
-          <FontAwesomeIcon icon={faLock} className="w-6" />
+          <FontAwesomeIcon icon={faLock} className="w-6 h-6" />
           <span className="w-60 pl-2 hidden md:block">PGP Public Key</span>
         </Link>
       </li>

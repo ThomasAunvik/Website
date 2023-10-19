@@ -147,9 +147,10 @@ export const AuthForm = (props: AuthFormProps) => {
         }}
         className={`${"border-black bg-black text-white hover:bg-white hover:text-black"} flex h-10 w-full items-center justify-center rounded-md border text-sm transition-all focus:outline-none`}
       >
-        <p>
-          Sign In with <FontAwesomeIcon icon={faGithub} />
-        </p>
+        <span className="flex flex-row align-middle">
+          <span className="mr-2">Sign In with</span>
+          <FontAwesomeIcon icon={faGithub} className="w-6 h-6" />
+        </span>
       </button>
       {type === "login" ? (
         <p className="text-center text-sm text-gray-600">
@@ -166,7 +167,11 @@ export const AuthForm = (props: AuthFormProps) => {
       ) : (
         <p className="text-center text-sm text-gray-600">
           Already have an account?{" "}
-          <Link href="/login" className="font-semibold text-gray-800">
+          <Link
+            href="/login"
+            target="_blank"
+            className="font-semibold text-gray-800"
+          >
             Sign in
           </Link>{" "}
           instead.

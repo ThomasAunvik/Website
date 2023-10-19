@@ -59,9 +59,10 @@ export const PasswordlessLogin = (props: PasswordlessLoginProps) => {
       {loading ? (
         <LoadingDots color="#808080" />
       ) : (
-        <p>
-          Sign In with Passkey <FontAwesomeIcon icon={faKey} />
-        </p>
+        <span className="flex flex-row align-middle">
+          <span className="mr-2">Sign In with Passkey</span>
+          <FontAwesomeIcon icon={faKey} className="w-6 h-6" />
+        </span>
       )}
     </button>
   );
