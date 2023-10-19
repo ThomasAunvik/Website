@@ -1,5 +1,4 @@
 import Image from "next/image";
-import Link from "next/link";
 import { AuthStatus } from "@/components/AuthStatus";
 
 import { ProfileSocials } from "@/components/Profile/Socials";

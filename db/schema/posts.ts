@@ -1,12 +1,4 @@
-import {
-  timestamp,
-  text,
-  primaryKey,
-  integer,
-  uuid,
-  boolean,
-} from "drizzle-orm/pg-core";
-import type { AdapterAccount } from "@auth/core/adapters";
+import { timestamp, text, uuid } from "drizzle-orm/pg-core";
 import { dbSchema } from "./schema";
 import { usersTable } from "./users";
 import { relations } from "drizzle-orm";
@@ -56,19 +48,16 @@ export const postRevisions = dbSchema.table("PostRevision", {
     .references(() => usersTable.id, { onDelete: "no action" }),
 });
 
-export const postRevisionRelations = relations(
-  postRevisions,
-  ({ one, many }) => ({
-    createdBy: one(usersTable, {
-      fields: [postRevisions.createdById],
-      references: [usersTable.id],
-    }),
-    post: one(postsTable, {
-      fields: [postRevisions.postId],
-      references: [postsTable.postId],
-    }),
+export const postRevisionRelations = relations(postRevisions, ({ one }) => ({
+  createdBy: one(usersTable, {
+    fields: [postRevisions.createdById],
+    references: [usersTable.id],
   }),
-);
+  post: one(postsTable, {
+    fields: [postRevisions.postId],
+    references: [postsTable.postId],
+  }),
+}));
 
 export type PostRevision = typeof postsTable.$inferSelect;
 export type NewPostRevision = typeof postsTable.$inferInsert;

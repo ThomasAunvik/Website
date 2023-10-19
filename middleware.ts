@@ -2,15 +2,13 @@ import withAuth, {
   NextAuthMiddlewareOptions,
   NextRequestWithAuth,
 } from "next-auth/middleware";
-import { NextFetchEvent, NextResponse } from "next/server";
+import { NextResponse } from "next/server";
 import { DrizzleAdapter } from "@auth/drizzle-adapter";
 import db from "./db";
-import { pgTableHijack } from "./lib/auth_options";
-import { PgTableFn } from "drizzle-orm/pg-core";
+import { pgTableHijack } from "./lib/utils/pgTableHijack";
 
 async function middleware(
   req: NextRequestWithAuth,
-  _: NextFetchEvent,
 ): Promise<NextResponse<unknown>> {
   // Get the pathname of the request (e.g. /, /protected)
   const path = req.nextUrl.pathname;
@@ -38,10 +36,7 @@ const middlewareOptions: NextAuthMiddlewareOptions = {
         const sessionToken = cookieHandler.get("next-auth.session-token");
         if (!sessionToken) return false;
 
-        const adapter = DrizzleAdapter(
-          db,
-          pgTableHijack as unknown as PgTableFn<undefined>,
-        );
+        const adapter = DrizzleAdapter(db, pgTableHijack);
         const getSession = adapter.getSessionAndUser;
         if (!getSession) return false;
 

@@ -5,20 +5,9 @@ import { DrizzleAdapter } from "@auth/drizzle-adapter";
 
 import GithubProvider from "next-auth/providers/github";
 import { verifyPasswordless } from "./passwordless";
-import db, {
-  accountsTable,
-  sessionsTable,
-  usersTable,
-  verificationTokensTable,
-} from "@/db";
-import { BuildColumns, eq } from "drizzle-orm";
+import db from "@/db";
 import { PromiseReturnType } from "./utils/promise";
-import {
-  PgColumnBuilderBase,
-  PgTableExtraConfig,
-  PgTableFn,
-} from "drizzle-orm/pg-core";
-import { dbSchema } from "@/db/schema/schema";
+import { pgTableHijack } from "./utils/pgTableHijack";
 
 const getUser = async (userId: string) => {
   return await db.query.usersTable.findFirst({
@@ -28,38 +17,17 @@ const getUser = async (userId: string) => {
 
 export type UserSession = PromiseReturnType<typeof getUser>;
 
-export const pgTableHijack: any = (
-  name: string,
-  columns: Record<string, PgColumnBuilderBase>,
-  extraConfig?: (
-    self: BuildColumns<string, Record<string, PgColumnBuilderBase>, "pg">,
-  ) => PgTableExtraConfig,
-) => {
-  switch (name) {
-    case "user":
-      return usersTable;
-    case "account":
-      return accountsTable;
-    case "session":
-      return sessionsTable;
-    case "verificationToken":
-      return verificationTokensTable;
-    default:
-      return dbSchema.table(name, columns, extraConfig);
-  }
-};
-
 export const authOptions: NextAuthOptions = {
   secret: process.env.NEXTAUTH_SECRET,
-  adapter: DrizzleAdapter(db, pgTableHijack as unknown as PgTableFn<undefined>),
+  adapter: DrizzleAdapter(db, pgTableHijack),
   session: { strategy: "database" },
   callbacks: {
-    async session({ session, user, token }) {
+    async session({ session, user }) {
       session.userId = user.id;
 
       return session;
     },
-    async jwt({ token, user, account, profile }) {
+    async jwt({ token, user }) {
       return {
         ...token,
         userId: user.id,

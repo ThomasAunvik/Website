@@ -1,5 +1,4 @@
 import db from "@/db";
-import { PromiseReturnType } from "@/lib/utils/promise";
 import { Button, List, ListItem } from "@mui/material";
 import Link from "next/link";
 
@@ -27,7 +26,7 @@ const getPosts = async () => {
   return posts;
 };
 
-type PostList = PromiseReturnType<typeof getPosts>;
+//type PostList = PromiseReturnType<typeof getPosts>;
 
 const PostsPage = async () => {
   const posts = await getPosts();

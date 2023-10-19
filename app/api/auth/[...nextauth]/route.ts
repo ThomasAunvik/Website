@@ -1,22 +1,18 @@
 import NextAuth, { CallbacksOptions, NextAuthOptions } from "next-auth";
-import { authOptions, pgTableHijack } from "@/lib/auth_options";
-import { NextApiRequest, NextApiResponse } from "next";
+import { authOptions } from "@/lib/auth_options";
 import { cookies } from "next/headers";
 import { randomUUID } from "crypto";
 import { encode, decode, JWTOptions } from "next-auth/jwt";
-import { NextRequest, NextResponse } from "next/server";
+import { NextRequest } from "next/server";
 import { DrizzleAdapter } from "@auth/drizzle-adapter";
 import db from "@/db";
-import { PgTableFn } from "drizzle-orm/pg-core";
+import { pgTableHijack } from "@/lib/utils/pgTableHijack";
 
-const handler = async (req: NextRequest, res: any) => {
-  const adapter = DrizzleAdapter(
-    db,
-    pgTableHijack as unknown as PgTableFn<undefined>,
-  );
+const handler = async (req: NextRequest, _: any) => {
+  const adapter = DrizzleAdapter(db, pgTableHijack);
 
   const callbacks: Partial<CallbacksOptions> = {
-    signIn: async ({ user, account, profile, email, credentials }) => {
+    signIn: async ({ user }) => {
       // Check if this sign in callback is being called in the credentials authentication flow. If so, use the next-auth adapter to create a session entry in the database (SignIn is called after authorize so we can safely assume the user is valid and already authenticated).
       if (
         req.url?.includes("callback") &&
@@ -89,7 +85,7 @@ const handler = async (req: NextRequest, res: any) => {
     },
   };
 
-  return NextAuth(req, res, options);
+  return NextAuth(options);
 };
 
 export { handler as GET, handler as POST };
