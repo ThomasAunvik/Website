@@ -1,6 +1,5 @@
 import { type NextAuthOptions } from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
-import crypto from "crypto";
 import { DrizzleAdapter } from "@auth/drizzle-adapter";
 
 import GithubProvider from "next-auth/providers/github";
@@ -8,6 +7,7 @@ import { verifyPasswordless } from "./passwordless";
 import db from "@/db";
 import { PromiseReturnType } from "./utils/promise";
 import { pgTableHijack } from "./utils/pgTableHijack";
+import { verifyPassword } from "./utils/passwordgen";
 
 const getUser = async (userId: string) => {
   return await db.query.usersTable.findFirst({
@@ -152,79 +152,4 @@ export const authOptions: NextAuthOptions = {
       },
     }),
   ],
-};
-
-interface Password {
-  secretData: {
-    value: string;
-    salt: string;
-  };
-  credentialsData: {
-    hashIteration: number;
-    algorithm: string;
-  };
-}
-
-export const generateStoredPassword = async (password: string) => {
-  return new Promise<Password>((resolve, fail) => {
-    const salt = crypto.randomBytes(16);
-
-    const hashIteration = 27500;
-    const digest = "sha512";
-    const type = "pbkdf2";
-    const algorithm = type + "-" + digest;
-
-    crypto.pbkdf2(
-      password,
-      salt,
-      hashIteration,
-      64,
-      digest,
-      (err, derivedKey) => {
-        if (err) return fail(err);
-
-        return resolve({
-          secretData: {
-            value: derivedKey.toString("base64"),
-            salt: salt.toString("base64"),
-          },
-          credentialsData: {
-            hashIteration,
-            algorithm,
-          },
-        });
-      },
-    );
-  });
-};
-
-export const verifyPassword = async (input: string, pass: Password) => {
-  const digest = pass.credentialsData.algorithm.split("-")[1];
-
-  return await verifyCredential(
-    input,
-    Buffer.from(pass.secretData.salt, "base64"),
-    Buffer.from(pass.secretData.value, "base64"),
-    pass.credentialsData.hashIteration,
-    64,
-    digest,
-  );
-};
-
-export const verifyCredential = async (
-  input: string,
-  salt: Buffer,
-  hash: Buffer,
-  iterations: number,
-  hashBytes: number,
-  digest: string,
-) => {
-  return new Promise<boolean>((resolve, fail) => {
-    crypto.pbkdf2(input, salt, iterations, hashBytes, digest, (err, verify) => {
-      if (err) fail(err);
-
-      const isValid = verify.toString("binary") === hash.toString("binary");
-      resolve(isValid);
-    });
-  });
 };

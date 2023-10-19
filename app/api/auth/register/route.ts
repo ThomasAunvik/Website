@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
-import { generateStoredPassword } from "@/lib/auth_options";
 import db, { credentialsTable, usersTable } from "@/db";
+import { generateStoredPassword } from "@/lib/utils/passwordgen";
 
 export async function POST(req: Request) {
   const { username, email, password } = await req.json();
