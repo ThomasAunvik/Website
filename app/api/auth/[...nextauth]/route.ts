@@ -8,7 +8,7 @@ import { DrizzleAdapter } from "@auth/drizzle-adapter";
 import db from "@/db";
 import { pgTableHijack } from "@/lib/utils/pgTableHijack";
 
-const handler = async (req: NextRequest, _: any) => {
+const handler = async (req: NextRequest, res: any) => {
   const adapter = DrizzleAdapter(db, pgTableHijack);
 
   const callbacks: Partial<CallbacksOptions> = {
@@ -85,7 +85,7 @@ const handler = async (req: NextRequest, _: any) => {
     },
   };
 
-  return NextAuth(options);
+  return NextAuth(req as any, res, options);
 };
 
 export { handler as GET, handler as POST };
