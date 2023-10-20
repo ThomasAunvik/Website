@@ -1,5 +1,5 @@
 import { Session as SessionModel, JWT as JWTModel } from "next-auth";
-import { SessionUser } from "@/lib/auth_options";
+import { SessionUser } from "@/lib/auth";
 
 declare module "next-auth" {
   interface Session extends SessionModel {

@@ -26,9 +26,9 @@ const getDerivation = async (
   digest: string,
   algorithm: string,
 ) => {
-  const passwordBuffer = str2ab(password);
+  const passwordBuffer = Buffer.from(password, "utf-8");
 
-  const pwHash = await crypto.subtle.digest(digest, passwordBuffer);
+  const pwHash = await crypto.subtle.digest("SHA-256", passwordBuffer);
 
   const importedKey = await crypto.subtle.importKey(
     "raw",
@@ -64,7 +64,7 @@ export const generateStoredPassword = async (password: string) => {
   const algorithm = type + ";" + digest;
 
   var derivation = await getDerivation(
-    salt.buffer,
+    salt,
     password,
     hashIteration,
     keyLength,
@@ -101,7 +101,7 @@ export const verifyPassword = async (input: string, pass: Password) => {
 
   return await verifyCredential(
     input,
-    salt.buffer,
+    salt,
     passArray,
     pass.credentialsData.hashIteration,
     passArray.length,

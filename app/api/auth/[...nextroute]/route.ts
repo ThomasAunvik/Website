@@ -1,30 +1,32 @@
-import NextAuth, { CallbacksOptions, NextAuthOptions } from "next-auth";
-import { authOptions } from "@/lib/auth_options";
+import { defaultEdgeLocation } from "@/lib/edge_settings";
+
+import { authAdapter, authConfig } from "@/lib/auth";
+import NextAuth from "next-auth";
+import { JWTOptions, encode, decode } from "@auth/core/jwt";
+import { CallbacksOptions } from "@auth/core/types";
 import { cookies } from "next/headers";
-import { randomUUID } from "crypto";
-import { encode, decode, JWTOptions } from "next-auth/jwt";
 import { NextRequest } from "next/server";
-import { DrizzleAdapter } from "@auth/drizzle-adapter";
-import db from "@/db";
-import { pgTableHijack } from "@/lib/utils/pgTableHijack";
 
-const handler = async (req: NextRequest, res: any) => {
-  const adapter = DrizzleAdapter(db, pgTableHijack);
+export const runtime = "edge"; // 'nodejs' is the default
+export const preferredRegion = defaultEdgeLocation; // only execute this function on iad1
+export const dynamic = "force-dynamic";
 
+const handler = async (req: NextRequest) => {
   const callbacks: Partial<CallbacksOptions> = {
     signIn: async ({ user }) => {
       // Check if this sign in callback is being called in the credentials authentication flow. If so, use the next-auth adapter to create a session entry in the database (SignIn is called after authorize so we can safely assume the user is valid and already authenticated).
+      console.log("Signing In...");
       if (
         req.url?.includes("callback") &&
         (req.url?.includes("credentials") || req.url?.includes("passkey")) &&
         req.method === "POST"
       ) {
-        if (user && adapter) {
+        if (user && authAdapter) {
           const sessionToken = generateSessionToken(); // Implement a function to generate the session token (you can use randomUUID as an example)
           const sessionMaxAge = 60 * 60 * 24 * 30; //30Days
           const sessionExpiry = fromDate(sessionMaxAge);
 
-          await adapter.createSession!({
+          await authAdapter.createSession!({
             sessionToken: sessionToken,
             userId: user.id,
             expires: sessionExpiry,
@@ -72,27 +74,32 @@ const handler = async (req: NextRequest, res: any) => {
     },
   };
 
-  const options: NextAuthOptions = {
-    ...authOptions,
-    adapter: adapter,
-    callbacks: {
-      ...authOptions.callbacks,
-      ...callbacks,
-    },
-    jwt: {
-      ...authOptions.jwt,
-      ...jwtOptions,
-    },
-  };
+  const {
+    handlers: { GET, POST },
+  } = NextAuth({
+    ...authConfig,
+    jwt: { ...authConfig.jwt, ...jwtOptions },
+    callbacks: { ...authConfig.callbacks, ...callbacks },
+  });
 
-  return NextAuth(req as any, res, options);
+  return { GET, POST };
 };
 
-export { handler as GET, handler as POST };
+const getWrapper = async (req: NextRequest) => {
+  const list = await handler(req);
+  return list.GET;
+};
+
+const postWrapper = async (req: NextRequest) => {
+  const list = await handler(req);
+  return list.POST;
+};
+
+export { getWrapper as GET, postWrapper as POST };
 
 const generateSessionToken = () => {
   // Use `randomUUID` if available. (Node 15.6++)
-  return randomUUID?.();
+  return crypto.randomUUID();
 };
 
 const fromDate = (time: number, date = Date.now()) => {

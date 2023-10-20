@@ -1,9 +1,8 @@
-import { authOptions } from "@/lib/auth_options";
-import { getServerSession } from "next-auth";
+import { auth } from "@/lib/auth";
 import Link from "next/link";
 
 export const LoginButton = async () => {
-  const session = await getServerSession(authOptions);
+  const session = await auth();
   if (session) return;
 
   return (

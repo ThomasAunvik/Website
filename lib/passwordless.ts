@@ -1,8 +1,7 @@
-import { getServerSession } from "next-auth";
-import { authOptions } from "./auth_options";
+import { auth } from "./auth";
 
 export const registerPassless = async () => {
-  const session = await getServerSession(authOptions);
+  const session = await auth();
   if (!session) return null;
 
   const payload = {

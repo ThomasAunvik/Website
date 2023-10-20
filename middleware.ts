@@ -1,43 +1,20 @@
-import withAuth, {
-  NextAuthMiddlewareOptions,
-  NextRequestWithAuth,
-} from "next-auth/middleware";
+import NextAuth from "next-auth";
 import { NextResponse } from "next/server";
-import { DrizzleAdapter } from "@auth/drizzle-adapter";
+import { authAdapter, authConfig } from "./lib/auth";
+import { cookies } from "next/headers";
 import db from "./db/edge";
-import { pgTableHijack } from "./lib/utils/pgTableHijack";
 
-async function middleware(
-  req: NextRequestWithAuth,
-): Promise<NextResponse<unknown>> {
-  // Get the pathname of the request (e.g. /, /protected)
-  const path = req.nextUrl.pathname;
-
-  // If it's the root path, just render it
-  if (path === "/") {
-    return NextResponse.next();
-  }
-
-  const session = req.nextauth;
-
-  if (!session && path === "/signout") {
-    return NextResponse.redirect(new URL("/login", req.url));
-  } else if (session && (path === "/login" || path === "/register")) {
-    return NextResponse.redirect(new URL("/signout", req.url));
-  }
-  return NextResponse.next();
-}
-
-const middlewareOptions: NextAuthMiddlewareOptions = {
+export const { auth } = NextAuth({
+  ...authConfig,
   callbacks: {
-    authorized: async ({ token, req }) => {
-      if (!token || token.email == "") {
-        const cookieHandler = req.cookies;
+    ...authConfig.callbacks,
+    async authorized({ auth }) {
+      if (!auth || auth.user.email == "") {
+        const cookieHandler = await cookies();
         const sessionToken = cookieHandler.get("next-auth.session-token");
         if (!sessionToken) return false;
 
-        const adapter = DrizzleAdapter(db, pgTableHijack);
-        const getSession = adapter.getSessionAndUser;
+        const getSession = authAdapter.getSessionAndUser;
         if (!getSession) return false;
 
         const sessionRes = await getSession(sessionToken.value);
@@ -52,19 +29,33 @@ const middlewareOptions: NextAuthMiddlewareOptions = {
       }
 
       const user = await db.query.usersTable.findFirst({
-        where: (users, { eq }) => eq(users.email, token.email ?? ""),
+        where: (users, { eq }) => eq(users.id, auth.user.id ?? ""),
       });
 
       return user != null;
     },
   },
-  pages: {
-    signIn: "/login",
-    signOut: "/signout",
-    newUser: "/register",
-  },
-};
+});
 
-export default withAuth(middleware, middlewareOptions);
+const handler = auth((req) => {
+  // Get the pathname of the request (e.g. /, /protected)
+  const path = req.nextUrl.pathname;
+
+  // If it's the root path, just render it
+  if (path === "/") {
+    return NextResponse.next();
+  }
+
+  const session = req.auth;
+
+  if (!session && path === "/signout") {
+    return NextResponse.redirect(new URL("/login", req.url));
+  } else if (session && (path === "/login" || path === "/register")) {
+    return NextResponse.redirect(new URL("/signout", req.url));
+  }
+  return NextResponse.next();
+});
+
+export default handler;
 
 export const config = { matcher: ["/dashboard", "/account"] };

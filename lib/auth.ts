@@ -1,10 +1,10 @@
-import { type NextAuthOptions } from "next-auth";
+import NextAuth, { NextAuthConfig } from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
 import { DrizzleAdapter } from "@auth/drizzle-adapter";
 
 import GithubProvider from "next-auth/providers/github";
 import { verifyPasswordless } from "./passwordless";
-import db from "@/db";
+import db from "@/db/edge";
 import { PromiseReturnType } from "./utils/promise";
 import { pgTableHijack } from "./utils/pgTableHijack";
 import { verifyPassword } from "./utils/passwordgen";
@@ -17,23 +17,31 @@ const getUser = async (userId: string) => {
 
 export type UserSession = PromiseReturnType<typeof getUser>;
 
-export const authOptions: NextAuthOptions = {
+export const authAdapter = DrizzleAdapter(db, pgTableHijack);
+
+export const authConfig: NextAuthConfig = {
   secret: process.env.NEXTAUTH_SECRET,
-  adapter: DrizzleAdapter(db, pgTableHijack),
+  adapter: authAdapter,
   session: { strategy: "database" },
+  pages: {
+    signIn: "/login",
+    signOut: "/signout",
+    newUser: "/register",
+  },
   callbacks: {
-    async session({ session, user }) {
+    async session({ session, user }: { session: any; user: any }) {
       session.userId = user.id;
 
+      console.log("Getting Session");
       return session;
     },
-    async jwt({ token, user }) {
+    async jwt({ token, user }: { token: any; user: any }) {
       return {
         ...token,
         userId: user.id,
       };
     },
-    async redirect({ url, baseUrl }) {
+    async redirect({ url, baseUrl }: { url: string; baseUrl: string }) {
       // Do not allow login/signout redirects
       if (url.startsWith(`${baseUrl}/login`)) return baseUrl;
       if (url.startsWith(`${baseUrl}/signout`)) return baseUrl;
@@ -56,7 +64,8 @@ export const authOptions: NextAuthOptions = {
         password: { label: "Password", type: "password" },
       },
       async authorize(login) {
-        const { email, password } = login ?? {};
+        const email = login.email as string | undefined;
+        const password = login.password as string | undefined;
         if (!email || !password) {
           throw new Error("Missing username or password");
         }
@@ -73,7 +82,6 @@ export const authOptions: NextAuthOptions = {
         }
 
         const { credentials, ...userData } = user;
-        console.log("Timeout", user);
 
         var loggedIn = false;
         for (
@@ -118,6 +126,7 @@ export const authOptions: NextAuthOptions = {
           throw new Error("Invalid username or password");
         }
 
+        console.log("Logging In", user);
         return userData;
       },
     }),
@@ -128,7 +137,7 @@ export const authOptions: NextAuthOptions = {
         passkey: { label: "Passkey", type: "passkey" },
       },
       async authorize(login) {
-        const { passkey } = login ?? {};
+        const passkey = login.passkey as string | undefined;
         if (!passkey) {
           throw new Error("Missing username or passkey");
         }
@@ -153,3 +162,8 @@ export const authOptions: NextAuthOptions = {
     }),
   ],
 };
+
+export const {
+  handlers: { GET, POST },
+  auth,
+} = NextAuth(authConfig);
