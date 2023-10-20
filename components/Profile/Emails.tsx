@@ -31,6 +31,7 @@ export const ProfileEmails = () => {
           href="/gpgcard.txt"
           className="flex flex-row items-center justify-center md:justify-start"
           aria-label="Email PGP Public Key"
+          prefetch={false}
         >
           <FontAwesomeIcon icon={faLock} className="w-6 h-6" />
           <span className="w-60 pl-2 hidden md:block">PGP Public Key</span>

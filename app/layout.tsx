@@ -1,14 +1,21 @@
 import "@/styles/globals.scss";
 import type { Metadata } from "next";
-import { Inter } from "next/font/google";
 import { Toaster } from "react-hot-toast";
 import { Analytics } from "@vercel/analytics/react";
+import { AxiomWebVitals } from "next-axiom";
+import { ThemeProvider } from "@/components/theme-provider";
+
+import { Inter as FontSans } from "next/font/google";
 
 import { config } from "@fortawesome/fontawesome-svg-core";
 import "@fortawesome/fontawesome-svg-core/styles.css";
+import { cn } from "@/lib/utils";
 config.autoAddCss = false;
 
-const inter = Inter({ subsets: ["latin"] });
+export const fontSans = FontSans({
+  subsets: ["latin"],
+  variable: "--font-sans",
+});
 
 const title = "Thaun.Dev";
 const description = "Thaun's Portfolio Site";
@@ -34,14 +41,25 @@ export default function RootLayout(props: RootLayoutProps) {
   const { children, authmodal } = props;
 
   return (
-    <html lang="en">
+    <html lang="en" suppressHydrationWarning>
       <body
-        className={inter.className + " h-screen flex flex-col pretty-scrollbar"}
+        className={cn(
+          "min-h-screen bg-background font-sans antialiased h-screen flex flex-col pretty-scrollbar",
+          fontSans.variable,
+        )}
       >
-        <div>{authmodal}</div>
-        <Toaster />
-        <div className="flex flex-1 flex-col">{children}</div>
-        <Analytics />
+        <ThemeProvider
+          attribute="class"
+          defaultTheme="dark"
+          enableSystem
+          disableTransitionOnChange
+        >
+          <AxiomWebVitals />
+          <div>{authmodal}</div>
+          <Toaster />
+          <div className="flex flex-1 flex-col">{children}</div>
+          <Analytics />
+        </ThemeProvider>
       </body>
     </html>
   );

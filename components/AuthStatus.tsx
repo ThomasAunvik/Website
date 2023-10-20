@@ -1,24 +1,49 @@
 import { auth } from "@/lib/auth";
 import Link from "next/link";
 
+import {
+  Menubar,
+  MenubarContent,
+  MenubarItem,
+  MenubarMenu,
+  MenubarSeparator,
+  MenubarTrigger,
+} from "./ui/menubar";
+
 export const AuthStatus = async () => {
   const session = await auth();
 
-  console.log("Session: ", session);
   if (!session) return;
 
   return (
-    <div className="w-full flex items-center bg-gray-600 h-8">
-      <p className="text-stone-200 text-sm pl-4">
-        <span className="hidden md:inline-block">Signed in as&nbsp;</span>
-        {session.user?.email}
-      </p>
-      <div className="mr-0 ml-auto pr-4 md:pr-8">
-        <Link href="/dashboard">Dashboard</Link>
+    <Menubar className="border-t-0 border-r-0 border-l-0 rounded-none">
+      <div className="flex-1">
+        <MenubarMenu>
+          <MenubarTrigger>Dashboard</MenubarTrigger>
+          <MenubarContent>
+            <Link href="/dashboard">
+              <MenubarItem>Open Dashboard</MenubarItem>
+            </Link>
+            <MenubarSeparator />
+            <Link href="/dashboard/posts">
+              <MenubarItem>Posts</MenubarItem>
+            </Link>
+          </MenubarContent>
+        </MenubarMenu>
       </div>
-      <div className="mr-0 pr-2 md:pr-8">
-        <Link href="/signout">Sign out</Link>
-      </div>
-    </div>
+      <MenubarMenu>
+        <MenubarTrigger>
+          <span>Signed in as&nbsp;{session?.user?.email}</span>
+        </MenubarTrigger>
+        <MenubarContent>
+          <Link href="/account">
+            <MenubarItem>Account</MenubarItem>
+          </Link>
+          <Link href="/signout">
+            <MenubarItem>Signout</MenubarItem>
+          </Link>
+        </MenubarContent>
+      </MenubarMenu>
+    </Menubar>
   );
 };

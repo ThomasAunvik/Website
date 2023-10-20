@@ -9,6 +9,8 @@ import { PromiseReturnType } from "./utils/promise";
 import { pgTableHijack } from "./utils/pgTableHijack";
 import { verifyPassword } from "./utils/passwordgen";
 
+import { Logger } from "next-axiom";
+
 const getUser = async (userId: string) => {
   return await db.query.usersTable.findFirst({
     where: (users, { eq }) => eq(users.id, userId),
@@ -31,8 +33,6 @@ export const authConfig: NextAuthConfig = {
   callbacks: {
     async session({ session, user }: { session: any; user: any }) {
       session.userId = user.id;
-
-      console.log("Getting Session");
       return session;
     },
     async jwt({ token, user }: { token: any; user: any }) {
@@ -52,6 +52,16 @@ export const authConfig: NextAuthConfig = {
       if (new URL(url).origin === baseUrl) return url;
       return baseUrl;
     },
+    async signIn({ user }) {
+      const log = new Logger();
+      log.info("User logged in (signin callback)", {
+        userId: user.id,
+        email: user.email,
+      });
+      await log.flush();
+
+      return true;
+    },
   },
   providers: [
     GithubProvider({
@@ -64,9 +74,13 @@ export const authConfig: NextAuthConfig = {
         password: { label: "Password", type: "password" },
       },
       async authorize(login) {
+        const log = new Logger();
+
         const email = login.email as string | undefined;
         const password = login.password as string | undefined;
         if (!email || !password) {
+          log.info("Attempted login, Missing username or password", { email });
+          await log.flush();
           throw new Error("Missing username or password");
         }
 
@@ -76,6 +90,8 @@ export const authConfig: NextAuthConfig = {
         });
 
         if (!user) {
+          log.info("Attempted login, User not found", { email });
+          await log.flush();
           // Sleep so that it doesn't immidiately fail if no user exist
           await new Promise((r) => setTimeout(r, 2000));
           throw new Error("Invalid username or password");
@@ -120,13 +136,28 @@ export const authConfig: NextAuthConfig = {
 
         if (!loggedIn) {
           if (credentials.length == 0) {
+            log.warn(
+              "Attempted login, user does not have any credentials set up",
+              { userId: user.id, email: user.email },
+            );
             // Sleep so that it doesn't immidiately fail if no credentials exists
             await new Promise((r) => setTimeout(r, 2000));
+          } else {
+            log.info("Attempted login, Invalid Password", {
+              userId: user.id,
+              email: user.email,
+            });
           }
+          await log.flush();
           throw new Error("Invalid username or password");
         }
 
-        console.log("Logging In", user);
+        log.info("User logged in", {
+          userId: user.id,
+          email: user.email,
+        });
+
+        await log.flush();
         return userData;
       },
     }),
@@ -137,13 +168,21 @@ export const authConfig: NextAuthConfig = {
         passkey: { label: "Passkey", type: "passkey" },
       },
       async authorize(login) {
+        const log = new Logger();
+
         const passkey = login.passkey as string | undefined;
         if (!passkey) {
+          log.info("Attempted login with passkey, Missing passkey");
+          await log.flush();
           throw new Error("Missing username or passkey");
         }
 
         const response = await verifyPasswordless(passkey);
         if (!response.success) {
+          log.info("Attempted login with passkey, Invalid passkey", {
+            passkey: response,
+          });
+          await log.flush();
           throw new Error("Invalid Passkey");
         }
 
@@ -152,11 +191,22 @@ export const authConfig: NextAuthConfig = {
         });
 
         if (!user) {
+          log.warn("Attempted login with passkey, User not found", {
+            passkey: response,
+          });
+          await log.flush();
           // Sleep so that it doesn't immidiately fail if no user exist
           await new Promise((r) => setTimeout(r, 2000));
           throw new Error("Invalid Passkey");
         }
 
+        log.info("User logged in with passkey", {
+          userId: user.id,
+          email: user.email,
+          passkey: response,
+        });
+
+        await log.flush();
         return user;
       },
     }),
