@@ -103,7 +103,7 @@ export const verifyPassword = async (input: string, pass: Password) => {
 
 export const verifyCredential = async (
   input: string,
-  salt: ArrayBuffer | ArrayBufferLike,
+  salt: Uint8Array | ArrayBuffer | ArrayBufferLike,
   hash: string,
   iterations: number,
   hashBytes: number,
