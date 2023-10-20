@@ -1,5 +1,3 @@
-import { defaultEdgeLocation } from "@/lib/edge_settings";
-
 import { authAdapter, authConfig } from "@/lib/auth";
 import NextAuth from "next-auth";
 import { JWTOptions, encode, decode } from "@auth/core/jwt";
@@ -8,7 +6,7 @@ import { cookies } from "next/headers";
 import { NextRequest } from "next/server";
 
 export const runtime = "edge"; // 'nodejs' is the default
-export const preferredRegion = defaultEdgeLocation; // only execute this function on iad1
+export const preferredRegion = "fra1"; // only execute this function on fra1
 export const dynamic = "force-dynamic";
 
 const handler = async (req: NextRequest) => {

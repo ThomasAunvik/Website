@@ -2,10 +2,9 @@ import { NextResponse } from "next/server";
 import db from "@/db/edge";
 import { generateStoredPassword } from "@/lib/utils/passwordgen";
 import { credentialsTable, usersTable } from "@/db/schema/tables";
-import { defaultEdgeLocation } from "@/lib/edge_settings";
 
 export const runtime = "edge"; // 'nodejs' is the default
-export const preferredRegion = defaultEdgeLocation; // only execute this function on iad1
+export const preferredRegion = "fra1"; // only execute this function on fra1
 export const dynamic = "force-dynamic";
 
 export async function POST(req: Request) {
