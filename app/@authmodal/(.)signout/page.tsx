@@ -1,6 +1,9 @@
 import Modal from "@/components/Modal/Modal";
 import { SignOut } from "@/components/SignOut";
 
+export const runtime = "edge"; // 'nodejs' is the default
+export const preferredRegion = "fra1"; // only execute this function on fra1
+
 export default function Home() {
   return (
     <Modal>

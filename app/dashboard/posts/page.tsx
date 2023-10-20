@@ -2,6 +2,9 @@ import db from "@/db";
 import { Button, List, ListItem } from "@mui/material";
 import Link from "next/link";
 
+export const runtime = "edge"; // 'nodejs' is the default
+export const preferredRegion = "fra1"; // only execute this function on fra1
+
 const getPosts = async () => {
   const posts = await db.query.postsTable.findMany({
     columns: {

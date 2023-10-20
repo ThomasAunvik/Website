@@ -3,6 +3,9 @@ import { AuthForm } from "@/components/AuthForm";
 import Link from "next/link";
 import Modal from "@/components/Modal/Modal";
 
+export const runtime = "edge"; // 'nodejs' is the default
+export const preferredRegion = "fra1"; // only execute this function on fra1
+
 export default function Login() {
   return (
     <Modal>

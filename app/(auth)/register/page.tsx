@@ -2,6 +2,9 @@ import Image from "next/image";
 import { AuthForm } from "@/components/AuthForm";
 import Link from "next/link";
 
+export const runtime = "edge"; // 'nodejs' is the default
+export const preferredRegion = "fra1"; // only execute this function on fra1
+
 export default function Login() {
   return (
     <div className="flex h-screen w-screen items-center justify-center bg-gray-50">
