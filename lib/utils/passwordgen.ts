@@ -63,7 +63,7 @@ export const generateStoredPassword = async (password: string) => {
   const algorithm = type + ";" + digest;
 
   var derivation = await getDerivation(
-    salt,
+    salt.buffer,
     password,
     hashIteration,
     256,
@@ -100,7 +100,7 @@ export const verifyPassword = async (input: string, pass: Password) => {
 
   return await verifyCredential(
     input,
-    salt,
+    salt.buffer,
     passArray,
     pass.credentialsData.hashIteration,
     passArray.length,
