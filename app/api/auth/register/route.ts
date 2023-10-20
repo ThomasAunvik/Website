@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
-import db, { credentialsTable, usersTable } from "@/db";
+import db from "@/db";
 import { generateStoredPassword } from "@/lib/utils/passwordgen";
+import { credentialsTable, usersTable } from "@/db/schema/tables";
 
 export async function POST(req: Request) {
   const { username, email, password } = await req.json();
@@ -27,7 +28,7 @@ export async function POST(req: Request) {
         username,
         email,
       })
-      .returning({ id: usersTable.id });
+      .returning();
 
     if (create.length <= 0) {
       throw Error("Failed to create user...");
