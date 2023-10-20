@@ -27,12 +27,12 @@ const getDerivation = async (
 ) => {
   const passwordBuffer = str2ab(password);
 
-  const pwHash = await crypto.subtle.digest("SHA-256", passwordBuffer);
+  const pwHash = await crypto.subtle.digest(digest, passwordBuffer);
 
   const importedKey = await crypto.subtle.importKey(
     "raw",
     pwHash,
-    "PBKDF2",
+    algorithm,
     false,
     ["deriveBits"],
   );
