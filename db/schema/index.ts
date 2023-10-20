@@ -1,5 +1,7 @@
 import { pgSchema } from "drizzle-orm/pg-core";
 
-export const dbSchema = pgSchema("thaun-website");
+const dbSchema = pgSchema("thaun-website");
+
+export default dbSchema;
 
 export type TableFn = typeof dbSchema.table;

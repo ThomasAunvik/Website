@@ -6,4 +6,5 @@
     },
     "editor.defaultFormatter": "dbaeumer.vscode-eslint",
 	"eslint.rules.customizations": [ { "rule": "*", "severity": "warn" } ],
+	"files.eol": "\n",
 }

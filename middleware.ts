@@ -4,7 +4,7 @@ import withAuth, {
 } from "next-auth/middleware";
 import { NextResponse } from "next/server";
 import { DrizzleAdapter } from "@auth/drizzle-adapter";
-import db from "./db";
+import db from "./db/edge";
 import { pgTableHijack } from "./lib/utils/pgTableHijack";
 
 async function middleware(

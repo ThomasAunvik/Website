@@ -1,5 +1,5 @@
 import { timestamp, text, integer, uuid, json } from "drizzle-orm/pg-core";
-import { dbSchema } from "./schema";
+import dbSchema from "./index";
 import { usersTable } from "./users";
 import { relations } from "drizzle-orm";
 

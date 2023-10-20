@@ -1,10 +1,5 @@
-import {
-  accountsTable,
-  sessionsTable,
-  usersTable,
-  verificationTokensTable,
-} from "@/db";
-import { dbSchema } from "@/db/schema/schema";
+import dbSchema from "@/db/schema";
+import * as tables from "@/db/schema/tables";
 import { BuildColumns } from "drizzle-orm";
 import { PgColumnBuilderBase, PgTableExtraConfig } from "drizzle-orm/pg-core";
 
@@ -12,18 +7,19 @@ export const pgTableHijack: any = (
   name: string,
   columns: Record<string, PgColumnBuilderBase>,
   extraConfig?: (
+    // eslint-disable-next-line unused-imports/no-unused-vars
     self: BuildColumns<string, Record<string, PgColumnBuilderBase>, "pg">,
   ) => PgTableExtraConfig,
 ) => {
   switch (name) {
     case "user":
-      return usersTable;
+      return tables.usersTable;
     case "account":
-      return accountsTable;
+      return tables.accountsTable;
     case "session":
-      return sessionsTable;
+      return tables.sessionsTable;
     case "verificationToken":
-      return verificationTokensTable;
+      return tables.verificationTokensTable;
     default:
       return dbSchema.table(name, columns, extraConfig);
   }

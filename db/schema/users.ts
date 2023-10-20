@@ -7,7 +7,7 @@ import {
   boolean,
 } from "drizzle-orm/pg-core";
 import type { AdapterAccount } from "@auth/core/adapters";
-import { dbSchema } from "./schema";
+import dbSchema from ".";
 import { relations } from "drizzle-orm";
 import { credentialsTable } from "./credentials";
 
