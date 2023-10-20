@@ -58,6 +58,7 @@ export const generateStoredPassword = async (password: string) => {
   const salt = crypto.getRandomValues(new Uint8Array(16));
 
   const hashIteration = 27500;
+  const keyLength = 256;
   const digest = "SHA-256";
   const type = "PBKDF2";
   const algorithm = type + ";" + digest;
@@ -66,7 +67,7 @@ export const generateStoredPassword = async (password: string) => {
     salt.buffer,
     password,
     hashIteration,
-    256,
+    keyLength,
     digest,
     type,
   );

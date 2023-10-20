@@ -1,7 +1,11 @@
 import { NextResponse } from "next/server";
-import db from "@/db";
+import db from "@/db/edge";
 import { generateStoredPassword } from "@/lib/utils/passwordgen";
 import { credentialsTable, usersTable } from "@/db/schema/tables";
+
+export const runtime = "edge"; // 'nodejs' is the default
+export const preferredRegion = "arn1"; // only execute this function on iad1
+export const dynamic = "force-dynamic";
 
 export async function POST(req: Request) {
   const { username, email, password } = await req.json();
