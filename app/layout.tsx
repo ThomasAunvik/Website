@@ -12,7 +12,7 @@ import "@fortawesome/fontawesome-svg-core/styles.css";
 import { cn } from "@/lib/utils";
 config.autoAddCss = false;
 
-export const fontSans = FontSans({
+const fontSans = FontSans({
   subsets: ["latin"],
   variable: "--font-sans",
 });
