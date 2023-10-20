@@ -10,6 +10,9 @@ import {
   GithubStatsOverview,
 } from "@/components/Profile/GithubStats";
 
+export const runtime = "edge"; // 'nodejs' is the default
+export const preferredRegion = "fra1"; // only execute this function on fra1
+
 export default function Home() {
   return (
     <main className="flex flex-1 h-max max-w-screen flex-row items-start flex-wrap">
