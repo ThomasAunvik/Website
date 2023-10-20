@@ -12,10 +12,11 @@ export interface Password {
 const str2ab = (str: string): ArrayBuffer => {
   const buffer = new ArrayBuffer(str.length * 2);
   const bufferInterface = new Uint8Array(buffer);
-  Array.from(str)
-    .forEach((_, index: number) => bufferInterface[index] = str.charCodeAt(index));
+  Array.from(str).forEach(
+    (_, index: number) => (bufferInterface[index] = str.charCodeAt(index)),
+  );
   return buffer;
-}
+};
 
 const getDerivation = async (
   salt: ArrayBuffer | ArrayBufferLike,
