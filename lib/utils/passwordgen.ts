@@ -10,7 +10,7 @@ export interface Password {
 }
 
 const getDerivation = async (
-  salt: ArrayBuffer | ArrayBufferLike,
+  salt: Uint8Array | ArrayBuffer | ArrayBufferLike,
   password: string,
   iterations: number,
   keyLength: number,
