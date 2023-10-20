@@ -87,12 +87,12 @@ const handler = async (req: NextRequest) => {
 
 const getWrapper = async (req: NextRequest) => {
   const list = await handler(req);
-  return list.GET;
+  return list.GET(req);
 };
 
 const postWrapper = async (req: NextRequest) => {
   const list = await handler(req);
-  return list.POST;
+  return list.POST(req);
 };
 
 export { getWrapper as GET, postWrapper as POST };
