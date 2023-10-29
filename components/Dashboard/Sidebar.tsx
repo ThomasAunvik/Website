@@ -2,7 +2,7 @@ import { LayoutDashboard } from "lucide-react";
 import drawerCategories from "./DrawerItems";
 import { Separator } from "../ui/separator";
 import { SidebarItem } from "./SidebarItem";
-import { SidebarToggle } from "./SidebarToggle";
+import Link from "next/link";
 
 export interface SidebarProps {}
 
@@ -14,15 +14,15 @@ export const Sidebar = () => {
       aria-label="Sidebar"
     >
       <div className="flex h-full flex-col overflow-y-auto border-r border-slate-200 bg-white px-3 py-4 dark:border-slate-700 dark:bg-slate-900">
-        <a
-          href="#"
+        <Link
+          href="/dashboard"
           className="mb-10 flex items-center rounded-lg px-3 py-2 text-slate-900 dark:text-white"
         >
           <LayoutDashboard />
           <span className="ml-3 text-base font-semibold">
-            Thaun's Dashboard
+            Thaun&apos;s Dashboard
           </span>
-        </a>
+        </Link>
         {drawerCategories.map((c, i) => {
           return (
             <ul key={`c-${c.name}`} className="space-y-2 text-sm font-medium">

@@ -1,6 +1,5 @@
 "use client";
 import { usePathname } from "next/navigation";
-import { DrawerItem } from "./DrawerItems";
 import Link from "next/link";
 import { ReactNode } from "react";
 

@@ -1,12 +1,9 @@
-import MiniDrawer from "@/components/Dashboard/Drawer";
-import ThemeRegistry from "@/components/Dashboard/ThemeRegistry";
 import { Metadata, Viewport } from "next";
 
 import "@fontsource/roboto/300.css";
 import "@fontsource/roboto/400.css";
 import "@fontsource/roboto/500.css";
 import "@fontsource/roboto/700.css";
-import { Sidebar } from "@/components/Dashboard/Sidebar";
 import { DashboardNavigation } from "@/components/Dashboard/DashboardNavigation";
 
 const title = "Thaun.Dev Dashboard";

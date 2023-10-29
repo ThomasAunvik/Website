@@ -1,8 +1,6 @@
 import { ReactNode } from "react";
 import { Sidebar } from "./Sidebar";
-import { NavigationMenu } from "../ui/navigation-menu";
-import { Menubar, MenubarMenu, MenubarTrigger } from "../ui/menubar";
-import { ChevronLeftIcon, ChevronRightIcon } from "lucide-react";
+import { Menubar, MenubarMenu } from "../ui/menubar";
 import { MenuSidebarToggle } from "./SidebarToggle";
 
 export interface DashboardNavigationProps {

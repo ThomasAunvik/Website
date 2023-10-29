@@ -2,7 +2,7 @@
 
 import { ChevronLeftIcon, ChevronRightIcon, SidebarIcon } from "lucide-react";
 import { Button } from "../ui/button";
-import { HTMLAttributes, useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { MenubarTrigger } from "../ui/menubar";
 
 export const SidebarToggle = () => {
