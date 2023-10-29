@@ -1,4 +1,4 @@
-import { Metadata } from "next";
+import { Metadata, Viewport } from "next";
 
 const title = "Thaun.Dev";
 const description = "Thaun's";
@@ -12,6 +12,9 @@ export const metadata: Metadata = {
     description: description,
   },
   metadataBase: new URL("https://thaun.dev"),
+};
+
+export const viewport: Viewport = {
   themeColor: "#FFF",
 };
 

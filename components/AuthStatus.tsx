@@ -33,7 +33,8 @@ export const AuthStatus = async () => {
       </div>
       <MenubarMenu>
         <MenubarTrigger>
-          <span>Signed in as&nbsp;{session?.user?.email}</span>
+          <span className="hidden sm:block">Signed in as&nbsp;</span>
+          <span>{session?.user?.email}</span>
         </MenubarTrigger>
         <MenubarContent>
           <Link href="/account">

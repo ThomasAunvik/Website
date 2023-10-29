@@ -31,7 +31,7 @@ export const authConfig: NextAuthConfig = {
     newUser: "/register",
   },
   callbacks: {
-    async session({ session, user }: { session: any; user: any }) {
+    async session({ session, user }) {
       session.userId = user.id;
       return session;
     },
@@ -138,7 +138,7 @@ export const authConfig: NextAuthConfig = {
           if (credentials.length == 0) {
             log.warn(
               "Attempted login, user does not have any credentials set up",
-              { userId: user.id, email: user.email },
+              { userId: user.id, email: user.email }
             );
             // Sleep so that it doesn't immidiately fail if no credentials exists
             await new Promise((r) => setTimeout(r, 2000));

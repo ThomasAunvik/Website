@@ -17,14 +17,14 @@ export default function Modal({ children }: { children: React.ReactNode }) {
         if (onDismiss) onDismiss();
       }
     },
-    [onDismiss, overlay, wrapper],
+    [onDismiss, overlay, wrapper]
   );
 
   const onKeyDown = useCallback(
     (e: KeyboardEvent) => {
       if (e.key === "Escape") onDismiss();
     },
-    [onDismiss],
+    [onDismiss]
   );
 
   return (

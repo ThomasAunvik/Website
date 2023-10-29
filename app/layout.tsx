@@ -1,5 +1,5 @@
 import "@/styles/globals.scss";
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import { Toaster } from "react-hot-toast";
 import { Analytics } from "@vercel/analytics/react";
 import { AxiomWebVitals } from "next-axiom";
@@ -29,6 +29,9 @@ export const metadata: Metadata = {
     description: description,
   },
   metadataBase: new URL("https://thaun.dev"),
+};
+
+export const viewport: Viewport = {
   themeColor: "#FFF",
 };
 
@@ -44,8 +47,8 @@ export default function RootLayout(props: RootLayoutProps) {
     <html lang="en" suppressHydrationWarning>
       <body
         className={cn(
-          "min-h-screen bg-background font-sans antialiased h-screen flex flex-col pretty-scrollbar",
-          fontSans.variable,
+          "bg-background font-sans antialiased flex flex-col",
+          fontSans.variable
         )}
       >
         <ThemeProvider
@@ -57,7 +60,7 @@ export default function RootLayout(props: RootLayoutProps) {
           <AxiomWebVitals />
           <div>{authmodal}</div>
           <Toaster />
-          <div className="flex flex-1 flex-col">{children}</div>
+          <div>{children}</div>
           <Analytics />
         </ThemeProvider>
       </body>

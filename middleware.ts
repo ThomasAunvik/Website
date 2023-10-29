@@ -21,6 +21,7 @@ export const { auth } = NextAuth({
         if (!sessionRes) return false;
 
         const userId = sessionRes.session.userId;
+
         const user = await db.query.usersTable.findFirst({
           where: (users, { eq }) => eq(users.id, userId),
         });
@@ -29,7 +30,7 @@ export const { auth } = NextAuth({
       }
 
       const user = await db.query.usersTable.findFirst({
-        where: (users, { eq }) => eq(users.id, auth.user.id ?? ""),
+        where: (users, { eq }) => eq(users.id, auth.userId ?? ""),
       });
 
       return user != null;
