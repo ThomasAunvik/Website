@@ -2,7 +2,6 @@
 
 import { useEffect, useState } from "react";
 import { signIn } from "next-auth/react";
-import LoadingDots from "@/components/Loading/LoadingDots";
 import toast from "react-hot-toast";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
@@ -32,7 +31,6 @@ import {
 import React from "react";
 import { useFormState } from "react-dom";
 import { onRegisterSubmit } from "./actions";
-import { cn } from "@/lib/utils";
 import { SubmitButton } from "../Forms/SubmitButton";
 
 export interface AuthFormProps {
@@ -79,7 +77,7 @@ export const AuthForm = (props: AuthFormProps) => {
         router.push("/");
       }
     }
-  }, [state]);
+  }, [state, authType, form, isModal, router]);
 
   const loginFormSubmit = (values: LoginData) => {
     setLoading(true);
