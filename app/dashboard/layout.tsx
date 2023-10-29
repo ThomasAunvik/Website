@@ -6,6 +6,8 @@ import "@fontsource/roboto/300.css";
 import "@fontsource/roboto/400.css";
 import "@fontsource/roboto/500.css";
 import "@fontsource/roboto/700.css";
+import { Sidebar } from "@/components/Dashboard/Sidebar";
+import { DashboardNavigation } from "@/components/Dashboard/DashboardNavigation";
 
 const title = "Thaun.Dev Dashboard";
 const description = "Thaun's Dashboard";
@@ -34,11 +36,11 @@ export default function DashboardLayout(props: DashboardLayoutProps) {
   const { children, modal } = props;
 
   return (
-    <ThemeRegistry options={{ key: "mui" }}>
-      <MiniDrawer>
-        <section>{children}</section>
-        {modal}
-      </MiniDrawer>
-    </ThemeRegistry>
+    <div>
+      <DashboardNavigation>
+        <section className="p-4">{children}</section>
+      </DashboardNavigation>
+      {modal}
+    </div>
   );
 }

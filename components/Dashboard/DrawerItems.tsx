@@ -1,7 +1,9 @@
-import HomeIcon from "@mui/icons-material/Home";
-import NewspaperIcon from "@mui/icons-material/Newspaper";
-import LogoutIcon from "@mui/icons-material/Logout";
-import DashboardIcon from "@mui/icons-material/Dashboard";
+import {
+  HomeIcon,
+  LayoutDashboardIcon,
+  LogOutIcon,
+  NewspaperIcon,
+} from "lucide-react";
 import React from "react";
 
 export interface DrawerItem {
@@ -30,7 +32,7 @@ const drawerCategories: DrawerCategory[] = [
         name: "Dashboard",
         href: "/dashboard",
         hrefExact: true,
-        icon: () => <DashboardIcon />,
+        icon: () => <LayoutDashboardIcon />,
       },
       {
         name: "Posts",
@@ -45,7 +47,7 @@ const drawerCategories: DrawerCategory[] = [
       {
         name: "Log out",
         href: "/signout",
-        icon: () => <LogoutIcon />,
+        icon: () => <LogOutIcon />,
       },
     ],
   },
