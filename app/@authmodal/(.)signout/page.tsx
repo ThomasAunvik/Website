@@ -1,4 +1,3 @@
-import Modal from "@/components/Modal/Modal";
 import { RoutedModal } from "@/components/Modal/RoutedModal";
 import { SignOut } from "@/components/SignOut";
 import { DialogContent, DialogHeader } from "@/components/ui/dialog";
