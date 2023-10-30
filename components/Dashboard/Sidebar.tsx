@@ -11,7 +11,7 @@ export const Sidebar = () => {
   return (
     <aside
       id="sidebar"
-      className="fixed -left-60 md:left-0 w-60 top-0 z-40 h-screen transition-all duration-500 group"
+      className="fixed -left-60 md:left-0 w-60 top-0 z-40 h-screen transition-all duration-500 group sidebar-closed"
       aria-label="Sidebar"
     >
       <div className="flex h-full flex-col overflow-y-auto border-r border-slate-200 bg-white px-3 py-4 dark:border-slate-700 dark:bg-slate-900">

@@ -9,7 +9,7 @@ export type ValidationResponse<T extends v.ObjectSchema<v.ObjectShape>> = {
 export const actionvalidate = <T extends v.ObjectSchema<v.ObjectShape>>(
   schema: T
 ) => {
-  return <S>(
+  return <S extends {}>(
     func: (prevState: S, data: v.Input<typeof schema>) => Promise<S>
   ) => {
     return async (

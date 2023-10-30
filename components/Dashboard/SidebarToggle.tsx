@@ -46,6 +46,9 @@ export const MenuSidebarToggle = () => {
 
     const contentFound = document.getElementById("sidebar-content");
 
+    const match = window.matchMedia("(min-width: 768px)");
+    setOpen(match.matches);
+
     sidebarRef.current = aside;
     contentRef.current = contentFound;
   }, []);
@@ -58,7 +61,9 @@ export const MenuSidebarToggle = () => {
         if (!sidebar) return;
         if (!content) return;
 
-        const isOpen = sidebar.className.includes("sidebar-open");
+        const match = window.matchMedia("(min-width: 768px)");
+        const isOpen =
+          sidebar.className.includes("sidebar-open") || (open && !match);
 
         if (isOpen) {
           sidebar.className =

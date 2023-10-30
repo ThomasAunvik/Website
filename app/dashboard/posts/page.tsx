@@ -1,5 +1,5 @@
+import { Button } from "@/components/ui/button";
 import db from "@/db/edge";
-import { Button, List, ListItem } from "@mui/material";
 import Link from "next/link";
 
 export const runtime = "edge"; // 'nodejs' is the default
@@ -29,8 +29,6 @@ const getPosts = async () => {
   return posts;
 };
 
-//type PostList = PromiseReturnType<typeof getPosts>;
-
 const PostsPage = async () => {
   const posts = await getPosts();
 
@@ -42,11 +40,11 @@ const PostsPage = async () => {
           <Button>Create New Post</Button>
         </Link>
       </div>
-      <List>
+      <ol>
         {posts.map((p) => (
-          <ListItem key={`post-${p.postId}`} title={p.title}></ListItem>
+          <li key={`post-${p.postId}`}>{p.title}</li>
         ))}
-      </List>
+      </ol>
     </div>
   );
 };
