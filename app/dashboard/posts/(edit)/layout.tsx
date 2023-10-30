@@ -1,4 +1,3 @@
-import MiniDrawer from "@/components/Dashboard/Drawer";
 import ThemeRegistry from "@/components/Dashboard/ThemeRegistry";
 import { Metadata, Viewport } from "next";
 
