@@ -13,7 +13,10 @@ export const DashboardNavigation = (props: DashboardNavigationProps) => {
   return (
     <div className="">
       <Sidebar />
-      <div id="sidebar-content" className="fixed left-60 top-0 w-full">
+      <div
+        id="sidebar-content"
+        className="fixed left-0 md:left-60 top-0 w-full transition-all duration-500"
+      >
         <Menubar className="border-t-0 border-r-0 border-l-0 rounded-none">
           <MenubarMenu>
             <MenuSidebarToggle />

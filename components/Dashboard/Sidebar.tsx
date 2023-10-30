@@ -3,6 +3,7 @@ import drawerCategories from "./DrawerItems";
 import { Separator } from "../ui/separator";
 import { SidebarItem } from "./SidebarItem";
 import Link from "next/link";
+import { DivClose, SidebarClose } from "./SidebarToggle";
 
 export interface SidebarProps {}
 
@@ -10,7 +11,7 @@ export const Sidebar = () => {
   return (
     <aside
       id="sidebar"
-      className="fixed left-0 w-60 top-0 z-40 h-screen transition-all duration-500"
+      className="fixed -left-60 md:left-0 w-60 top-0 z-40 h-screen transition-all duration-500 group"
       aria-label="Sidebar"
     >
       <div className="flex h-full flex-col overflow-y-auto border-r border-slate-200 bg-white px-3 py-4 dark:border-slate-700 dark:bg-slate-900">
@@ -22,6 +23,9 @@ export const Sidebar = () => {
           <span className="ml-3 text-base font-semibold">
             Thaun&apos;s Dashboard
           </span>
+          <div className="block md:hidden">
+            <SidebarClose />
+          </div>
         </Link>
         {drawerCategories.map((c, i) => {
           return (
@@ -47,6 +51,7 @@ export const Sidebar = () => {
           );
         })}
       </div>
+      <DivClose />
     </aside>
   );
 };
