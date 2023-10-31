@@ -32,10 +32,8 @@ export default function PostEditLayout(props: PostEditProps) {
   const { children } = props;
 
   return (
-    <ThemeRegistry options={{ key: "mui" }}>
-      <MiniDrawer>
-        <section>{children}</section>
-      </MiniDrawer>
+    <ThemeRegistry>
+      <section>{children}</section>
     </ThemeRegistry>
   );
 }
