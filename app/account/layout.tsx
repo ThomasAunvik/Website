@@ -1,4 +1,3 @@
-import ThemeRegistry from "@/components/Dashboard/ThemeRegistry";
 import { Metadata, Viewport } from "next";
 
 import "@fontsource/roboto/300.css";
@@ -32,8 +31,6 @@ export default function AccountLayout(props: AccountLayoutProps) {
   const { children } = props;
 
   return (
-    <ThemeRegistry options={{ key: "mui" }}>
       <section>{children}</section>
-    </ThemeRegistry>
   );
 }
