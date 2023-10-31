@@ -10,7 +10,7 @@ export const actionvalidate = <T extends v.ObjectSchema<v.ObjectShape>>(
   schema: T
 ) => {
   return <S extends {}>(
-    func: (prevState: S, data: v.Input<typeof schema>) => Promise<S>
+    func: (prevState: S, data: v.Input<typeof schema>) => Promise<S | void>
   ) => {
     return async (
       prevState: S,
@@ -42,7 +42,7 @@ export const actionvalidate = <T extends v.ObjectSchema<v.ObjectShape>>(
         const returned = await func(prevState, result.output);
 
         const newState: S & ValidationResponse<T> = {
-          ...returned,
+          ...(returned ?? prevState),
           success: true,
           error: undefined,
           issues: undefined,
