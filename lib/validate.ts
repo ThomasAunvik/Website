@@ -1,14 +1,13 @@
+"use server";
 import * as v from "valibot";
 
-export type ValidationResponse<T extends v.ObjectSchema<v.ObjectShape>> = {
+export type ValidationResponse<T extends v.ObjectSchema<any>> = {
   success?: boolean;
   issues?: { [key in keyof v.Input<T>]?: v.Issue };
   error?: string;
 };
 
-export const actionvalidate = <T extends v.ObjectSchema<v.ObjectShape>>(
-  schema: T
-) => {
+export const actionvalidate = <T extends v.ObjectSchema<any>>(schema: T) => {
   return <S extends {}>(
     func: (prevState: S, data: v.Input<typeof schema>) => Promise<S | void>
   ) => {
@@ -52,6 +51,59 @@ export const actionvalidate = <T extends v.ObjectSchema<v.ObjectShape>>(
       } catch (err) {
         const failedResponse: S & ValidationResponse<T> = {
           ...prevState,
+          success: false,
+          issues: undefined,
+          error: err?.toString(),
+        };
+
+        return failedResponse;
+      }
+    };
+  };
+};
+
+export const actionvalidate2 = <T extends v.ObjectSchema<any>>(schema: T) => {
+  return (
+    func: (
+      data: v.Input<typeof schema>
+    ) => Promise<ValidationResponse<T> | void>
+  ) => {
+    return async (
+      form: v.Input<typeof schema>
+    ): Promise<ValidationResponse<T>> => {
+      const result = v.safeParse(schema, form);
+
+      if (!result.success) {
+        return {
+          success: false,
+          issues: result.issues.reduce((acc, i) => {
+            const key =
+              i.path
+                ?.map((p) => p.key as string)
+                .join(".")
+                .toString() ?? "unknown";
+
+            return {
+              ...acc,
+              [key]: i,
+            };
+          }, {}),
+        };
+      }
+
+      try {
+        const returned = await func(result.output);
+
+        const newState: ValidationResponse<T> = {
+          ...(returned ?? {}),
+          success: true,
+          error: undefined,
+          issues: undefined,
+        };
+
+        return newState;
+      } catch (err) {
+        const failedResponse: ValidationResponse<T> = {
           success: false,
           issues: undefined,
           error: err?.toString(),

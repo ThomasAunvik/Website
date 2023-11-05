@@ -1,3 +1,4 @@
+"use client";
 import * as v from "valibot";
 
 import { useForm } from "react-hook-form";
@@ -7,20 +8,25 @@ import { useFormState } from "react-dom";
 import { useEffect } from "react";
 import toast from "react-hot-toast";
 
-export const useActionForm = <
-  T extends v.ObjectSchema<v.ObjectShape>,
-  S extends {},
->(
-  schema: T,
-  defaultValues: v.Input<typeof schema>,
+const testSceham = v.object({
+  username: v.string("username is required", [
+    v.minLength(3, "Needs to be at least 3 characters"),
+    v.endsWith("cool", "Needs to end with `cool`"),
+  ]),
+  password: v.string("password is required"),
+});
+
+export const useActionForm = <T extends v.ObjectSchema<any>, S extends {}>(
+  schema: v.ObjectSchema<any>,
+  defaultValues: v.Output<T>,
   action: (prevState: S, form: FormData) => Promise<S & ValidationResponse<T>>,
   defaultState: S & ValidationResponse<T>
 ) => {
   const [state, formAction] = useFormState(action, defaultState);
 
-  const form = useForm<v.Input<typeof schema>>({
+  const form = useForm({
     resolver: valibotResolver(schema),
-    defaultValues: defaultValues as any,
+    defaultValues: defaultValues as v.Output<typeof schema>,
   });
 
   useEffect(() => {

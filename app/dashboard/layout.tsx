@@ -30,14 +30,13 @@ interface DashboardLayoutProps {
 }
 
 export default function DashboardLayout(props: DashboardLayoutProps) {
-  const { children, modal } = props;
+  const { children } = props;
 
   return (
     <div>
       <DashboardNavigation>
         <section className="p-4">{children}</section>
       </DashboardNavigation>
-      {modal}
     </div>
   );
 }
