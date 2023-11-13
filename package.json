@@ -63,7 +63,7 @@
     "valibot": "^0.20.1"
   },
   "devDependencies": {
-    "@types/bcryptjs": "^2.4.5",
+    "@types/bcryptjs": "^2.4.6",
     "@types/react-fontawesome": "^1.6.7",
     "drizzle-kit": "^0.19.13",
     "eslint-config-prettier": "^9.0.0",
