@@ -17,6 +17,7 @@
     "updates": "npx npm-check-updates"
   },
   "dependencies": {
+    "@auth/core": "experimental",
     "@auth/drizzle-adapter": "^0.3.6",
     "@fontsource/roboto": "^5.0.8",
     "@fortawesome/fontawesome-svg-core": "^6.4.2",
@@ -45,7 +46,7 @@
     "eslint-config-next": "^14.0.2",
     "lucide-react": "^0.292.0",
     "next": "^14.0.2",
-    "next-auth": "5.0.0-beta.3",
+    "next-auth": "experimental",
     "next-axiom": "^1.1.0",
     "next-themes": "^0.2.1",
     "postcss": "8.4.31",
