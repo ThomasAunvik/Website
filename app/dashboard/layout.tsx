@@ -26,10 +26,9 @@ export const viewport: Viewport = {
 
 interface DashboardLayoutProps {
   children: React.ReactNode;
-  modal: React.ReactNode;
 }
 
-export default function DashboardLayout(props: DashboardLayoutProps) {
+const DashboardLayout = (props: DashboardLayoutProps) => {
   const { children } = props;
 
   return (
@@ -39,4 +38,6 @@ export default function DashboardLayout(props: DashboardLayoutProps) {
       </DashboardNavigation>
     </div>
   );
-}
+};
+
+export default DashboardLayout;

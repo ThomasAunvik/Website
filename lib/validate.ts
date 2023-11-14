@@ -38,8 +38,7 @@ export type ValidationResponse<T extends v.ObjectSchema<any>> = {
 };
 
 export const actionvalidate = <T extends v.ObjectSchema<any>, S extends {}>(
-  schema: T,
-  initialState?: S
+  schema: T
 ) => {
   return (
     func: (data: v.Input<typeof schema>) => Promise<ActionResponse<T, S> | void>
