@@ -2,7 +2,7 @@
 
 import * as v from "valibot";
 import { Input } from "@/components/ui/input";
-import { postFormAction2 } from "./PostFormSubmit";
+import { postFormAction } from "./PostFormSubmit";
 import { SubmitButton } from "@/components/Forms/SubmitButton";
 import { PostSchema } from "./PostFormValidate";
 import {
@@ -16,6 +16,7 @@ import {
 import { Textarea } from "@/components/ui/textarea";
 import { valibotResolver } from "@hookform/resolvers/valibot";
 import { useForm } from "react-hook-form";
+import { handleSubmitForm } from "@/lib/utils/formclientaction";
 
 const PostForm = () => {
   const form = useForm<v.Output<typeof PostSchema>>({
@@ -23,17 +24,9 @@ const PostForm = () => {
     defaultValues: {},
   });
 
-  const onSubmit = async (values: v.Output<typeof PostSchema>) => {
-    // Do something with the form values.
-    // ✅ This will be type-safe and validated.
-    console.log(values);
-    const res = await postFormAction2(values);
-    console.log("Res: ", res);
-  };
-
   return (
     <Form {...form}>
-      <form onSubmit={form.handleSubmit(onSubmit)}>
+      <form onSubmit={handleSubmitForm(form, postFormAction)}>
         <fieldset className="max-w-md">
           <FormField
             control={form.control}
@@ -82,7 +75,9 @@ const PostForm = () => {
           />
         </fieldset>
         <div className="max-w-xs mt-4">
-          <SubmitButton>Submit</SubmitButton>
+          <SubmitButton loading={form.formState.isSubmitting}>
+            Submit
+          </SubmitButton>
         </div>
       </form>
     </Form>

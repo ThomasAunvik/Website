@@ -1,4 +1,4 @@
-import { AuthForm } from "@/components/Auth/AuthForm";
+import { RegisterForm } from "@/components/Auth/RegisterForm";
 import { RoutedModal } from "@/components/Modal/RoutedModal";
 import { DialogContent, DialogHeader } from "@/components/ui/dialog";
 
@@ -15,7 +15,7 @@ export default function Login() {
             Create an account with your email and password
           </p>
         </DialogHeader>
-        <AuthForm authType="register" isModal={true} />
+        <RegisterForm isModal={true} />
       </DialogContent>
     </RoutedModal>
   );

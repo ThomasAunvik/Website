@@ -1,4 +1,4 @@
-import { AuthForm } from "@/components/Auth/AuthForm";
+import { LoginForm } from "@/components/Auth/LoginForm";
 
 export const runtime = "edge"; // 'nodejs' is the default
 export const preferredRegion = "fra1"; // only execute this function on fra1
@@ -13,7 +13,7 @@ export default function Login() {
             Use your email and password to sign in
           </p>
         </div>
-        <AuthForm authType="login" />
+        <LoginForm />
       </div>
     </div>
   );

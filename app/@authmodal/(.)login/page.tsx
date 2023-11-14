@@ -1,6 +1,6 @@
-import { AuthForm } from "@/components/Auth/AuthForm";
 import { DialogContent, DialogHeader } from "@/components/ui/dialog";
 import { RoutedModal } from "@/components/Modal/RoutedModal";
+import { LoginForm } from "@/components/Auth/LoginForm";
 
 export const runtime = "edge"; // 'nodejs' is the default
 export const preferredRegion = "fra1"; // only execute this function on fra1
@@ -15,7 +15,7 @@ export default function Login() {
             Use your email and password to sign in
           </p>
         </DialogHeader>
-        <AuthForm authType="login" isModal />
+        <LoginForm isModal />
       </DialogContent>
     </RoutedModal>
   );

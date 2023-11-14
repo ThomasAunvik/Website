@@ -8,10 +8,7 @@ import { credentialsTable, usersTable } from "@/db/schema/tables";
 
 import { Logger } from "next-axiom";
 
-export const onRegisterSubmit = actionvalidate(RegisterSchema)(async (
-  state,
-  data
-) => {
+export const onRegisterSubmit = actionvalidate(RegisterSchema)(async (data) => {
   const log = new Logger();
 
   const exists = await db.query.usersTable.findFirst({

@@ -1,17 +1,11 @@
 "use server";
 
-import { actionvalidate, actionvalidate2 } from "@/lib/validate";
+import { actionvalidate } from "@/lib/validate";
 import { PostSchema } from "./PostFormValidate";
+import { redirect } from "next/navigation";
 
-export const postFormAction = actionvalidate(PostSchema)(async (
-  state,
-  form
-) => {
+export const postFormAction = actionvalidate(PostSchema)(async (form) => {
   console.log("Recieved Action: ", form);
 
-  return state;
-});
-
-export const postFormAction2 = actionvalidate2(PostSchema)(async (form) => {
-  console.log("Recieved Action: ", form);
+  redirect("/");
 });

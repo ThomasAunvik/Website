@@ -1,5 +1,26 @@
 "use server";
+import { Logger } from "next-axiom";
 import * as v from "valibot";
+
+export type BadRequestResponse<T extends v.ObjectSchema<any>> = {
+  state: "badrequest";
+  issues: { [key in keyof v.Input<T>]?: v.Issue };
+};
+
+export type ErrorResponse = {
+  state: "error";
+  error: string | undefined | null;
+};
+
+export type SuccessResponse<S extends {} | undefined> = {
+  state: "success";
+  data: S;
+};
+
+export type ActionResponse<
+  T extends v.ObjectSchema<any>,
+  S extends {} | undefined,
+> = SuccessResponse<S> | BadRequestResponse<T> | ErrorResponse;
 
 export type ValidationResponse<T extends v.ObjectSchema<any>> = {
   success?: boolean;
@@ -7,76 +28,21 @@ export type ValidationResponse<T extends v.ObjectSchema<any>> = {
   error?: string;
 };
 
-export const actionvalidate = <T extends v.ObjectSchema<any>>(schema: T) => {
-  return <S extends {}>(
-    func: (prevState: S, data: v.Input<typeof schema>) => Promise<S | void>
-  ) => {
-    return async (
-      prevState: S,
-      form: FormData
-    ): Promise<S & ValidationResponse<T>> => {
-      const data = Object.fromEntries(form);
-      const result = v.safeParse(schema, data);
-
-      if (!result.success) {
-        return {
-          ...prevState,
-          success: false,
-          issues: result.issues.reduce((acc, i) => {
-            const key =
-              i.path
-                ?.map((p) => p.key as string)
-                .join(".")
-                .toString() ?? "unknown";
-
-            return {
-              ...acc,
-              [key]: i,
-            };
-          }, {}),
-        };
-      }
-
-      try {
-        const returned = await func(prevState, result.output);
-
-        const newState: S & ValidationResponse<T> = {
-          ...(returned ?? prevState),
-          success: true,
-          error: undefined,
-          issues: undefined,
-        };
-
-        return newState;
-      } catch (err) {
-        const failedResponse: S & ValidationResponse<T> = {
-          ...prevState,
-          success: false,
-          issues: undefined,
-          error: err?.toString(),
-        };
-
-        return failedResponse;
-      }
-    };
-  };
-};
-
-export const actionvalidate2 = <T extends v.ObjectSchema<any>>(schema: T) => {
-  return (
-    func: (
-      data: v.Input<typeof schema>
-    ) => Promise<ValidationResponse<T> | void>
-  ) => {
+export const actionvalidate = <T extends v.ObjectSchema<any>, S extends {}>(
+  schema: T,
+  initialState?: S
+) => {
+  return (func: (data: v.Input<typeof schema>) => Promise<S | void>) => {
     return async (
       form: v.Input<typeof schema>
-    ): Promise<ValidationResponse<T>> => {
+    ): Promise<ActionResponse<T, S>> => {
       const result = v.safeParse(schema, form);
 
       if (!result.success) {
-        return {
-          success: false,
-          issues: result.issues.reduce((acc, i) => {
+        const log = new Logger();
+
+        const issues = result.issues.reduce(
+          (acc, i) => {
             const key =
               i.path
                 ?.map((p) => p.key as string)
@@ -87,27 +53,52 @@ export const actionvalidate2 = <T extends v.ObjectSchema<any>>(schema: T) => {
               ...acc,
               [key]: i,
             };
-          }, {}),
+          },
+          {} as { [key in keyof v.Input<typeof schema>]: v.Issue }
+        );
+
+        log.info("Form Submitted Invalid Request", { issues: issues });
+        await log.flush();
+
+        return {
+          state: "badrequest",
+          issues: issues,
         };
       }
 
       try {
         const returned = await func(result.output);
 
-        const newState: ValidationResponse<T> = {
-          ...(returned ?? {}),
-          success: true,
-          error: undefined,
-          issues: undefined,
+        const newState: ActionResponse<T, S> = {
+          state: "success",
+          data: returned ?? initialState ?? ({} as S),
         };
 
         return newState;
       } catch (err) {
-        const failedResponse: ValidationResponse<T> = {
-          success: false,
-          issues: undefined,
+        const log = new Logger();
+
+        if (err instanceof Error) {
+          const failedResponse: ActionResponse<T, S> = {
+            state: "error",
+            error: err?.stack,
+          };
+
+          log.error(`Action Error: ${err?.message}`, {
+            stacktrace: err?.stack,
+          });
+          await log.flush();
+
+          return failedResponse;
+        }
+
+        const failedResponse: ActionResponse<T, S> = {
+          state: "error",
           error: err?.toString(),
         };
+
+        log.error(`Action Error: ${err?.toString()}`);
+        await log.flush();
 
         return failedResponse;
       }
