@@ -12,6 +12,11 @@ export type ErrorResponse = {
   error: string | undefined | null;
 };
 
+export type RedirectResponse = {
+  state: "redirect";
+  location: string | undefined | null;
+};
+
 export type SuccessResponse<S extends {} | undefined> = {
   state: "success";
   data: S;
@@ -20,7 +25,11 @@ export type SuccessResponse<S extends {} | undefined> = {
 export type ActionResponse<
   T extends v.ObjectSchema<any>,
   S extends {} | undefined,
-> = SuccessResponse<S> | BadRequestResponse<T> | ErrorResponse;
+> =
+  | SuccessResponse<S>
+  | RedirectResponse
+  | BadRequestResponse<T>
+  | ErrorResponse;
 
 export type ValidationResponse<T extends v.ObjectSchema<any>> = {
   success?: boolean;
@@ -32,7 +41,9 @@ export const actionvalidate = <T extends v.ObjectSchema<any>, S extends {}>(
   schema: T,
   initialState?: S
 ) => {
-  return (func: (data: v.Input<typeof schema>) => Promise<S | void>) => {
+  return (
+    func: (data: v.Input<typeof schema>) => Promise<ActionResponse<T, S> | void>
+  ) => {
     return async (
       form: v.Input<typeof schema>
     ): Promise<ActionResponse<T, S>> => {
@@ -69,12 +80,14 @@ export const actionvalidate = <T extends v.ObjectSchema<any>, S extends {}>(
       try {
         const returned = await func(result.output);
 
-        const newState: ActionResponse<T, S> = {
-          state: "success",
-          data: returned ?? initialState ?? ({} as S),
-        };
+        if (returned) {
+          return returned;
+        }
 
-        return newState;
+        return {
+          state: "success",
+          data: {} as S,
+        };
       } catch (err) {
         const log = new Logger();
 

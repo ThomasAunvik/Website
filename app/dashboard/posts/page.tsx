@@ -42,7 +42,12 @@ const PostsPage = async () => {
       </div>
       <ol>
         {posts.map((p) => (
-          <li key={`post-${p.postId}`}>{p.title}</li>
+          <li key={`post-${p.postId}`}>
+            {p.title}{" "}
+            <Link href={`/dashboard/posts/${p.postId}`}>
+              <Button>Go To Post...</Button>
+            </Link>
+          </li>
         ))}
       </ol>
     </div>

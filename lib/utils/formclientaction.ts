@@ -20,6 +20,12 @@ export const handleSubmitForm = <T extends v.ObjectSchema<any>>(
     switch (res.state) {
       case "success":
         break;
+      case "redirect":
+        const location = res.location;
+        if (location) {
+          window.location.href = new URL(location, window.location.href).href;
+        }
+        break;
       case "badrequest":
         form.clearErrors();
         getEntries(res.issues).map((t) => {

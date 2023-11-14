@@ -2,9 +2,9 @@
 
 import * as v from "valibot";
 import { Input } from "@/components/ui/input";
-import { postFormAction } from "./PostFormSubmit";
+import { postFormAction, updatePostFormAction } from "./PostFormSubmit";
 import { SubmitButton } from "@/components/Forms/SubmitButton";
-import { PostSchema } from "./PostFormValidate";
+import { UpdatePostSchema } from "./PostFormValidate";
 import {
   Form,
   FormControl,
@@ -18,16 +18,32 @@ import { valibotResolver } from "@hookform/resolvers/valibot";
 import { useForm } from "react-hook-form";
 import { handleSubmitForm } from "@/lib/utils/formclientaction";
 
-const PostForm = () => {
-  const form = useForm<v.Output<typeof PostSchema>>({
-    resolver: valibotResolver(PostSchema),
-    defaultValues: {},
+export interface PostFormProps {
+  post?: v.Input<typeof UpdatePostSchema>;
+}
+
+const PostForm = (props: PostFormProps) => {
+  const { post } = props;
+
+  const form = useForm<v.Input<typeof UpdatePostSchema>>({
+    resolver: valibotResolver(UpdatePostSchema),
+    defaultValues: post ?? { postId: "" },
   });
 
   return (
     <Form {...form}>
-      <form onSubmit={handleSubmitForm(form, postFormAction)}>
+      <form
+        onSubmit={handleSubmitForm(
+          form,
+          post == null ? postFormAction : updatePostFormAction
+        )}
+      >
         <fieldset className="max-w-md">
+          <FormField
+            control={form.control}
+            name="postId"
+            render={() => <span />}
+          />
           <FormField
             control={form.control}
             name="title"
@@ -45,12 +61,12 @@ const PostForm = () => {
           />
           <FormField
             control={form.control}
-            name="description"
+            name="undertitle"
             render={({ field }) => (
               <FormItem>
                 <FormLabel>Description</FormLabel>
                 <FormControl>
-                  <Input type="description" placeholder="" {...field} />
+                  <Input type="undertitle" placeholder="" {...field} />
                 </FormControl>
                 <div className="h-6">
                   <FormMessage />
