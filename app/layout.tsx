@@ -46,7 +46,7 @@ export default function RootLayout(props: RootLayoutProps) {
   return (
     <html lang="en" suppressHydrationWarning>
       <head>
-        <meta name="google-adsense-account" content="ca-pub-5531336879643074">
+        <meta name="google-adsense-account" content="ca-pub-5531336879643074" />
       </head>
       <body
         className={cn(
